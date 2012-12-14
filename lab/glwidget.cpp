@@ -10,6 +10,10 @@
 #include <QWheelEvent>
 #include "glm.h"
 
+
+#include "game/World.h"
+#include "game/Target.h"
+
 using std::cout;
 using std::endl;
 
@@ -25,8 +29,9 @@ static const int MAX_FPS = 120;
  **/
 GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent),
     m_timer(this), m_prevTime(0), m_prevFps(0.f), m_fps(0.f),
-    m_increment(0), m_font("Deja Vu Sans Mono", 8, 4)
+    m_font("Deja Vu Sans Mono", 8, 4)
 {
+
     setFocusPolicy(Qt::StrongFocus);
     setMouseTracking(true);
 
@@ -37,6 +42,18 @@ GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent),
     m_camera.fovy = 60.f;
 
     connect(&m_timer, SIGNAL(timeout()), this, SLOT(update()));
+
+    m_originalMouse = Vector2(-1, -1);
+    m_firstPersonMode = false;
+
+    m_world = new World();
+    m_showCollision = false;
+
+    m_world->addEntity(new Target(Vector3(-1.25f, 0.f, 0.f), Vector2(0.f, 0.f), m_particle));
+
+    setCursor(Qt::ArrowCursor);
+
+
 }
 
 /**
@@ -51,6 +68,8 @@ GLWidget::~GLWidget()
     glDeleteLists(m_skybox, 1);
     const_cast<QGLContext *>(context())->deleteTexture(m_cubeMap);
     glmDelete(m_dragon.model);
+
+    delete m_world;
 }
 
 /**
@@ -58,6 +77,7 @@ GLWidget::~GLWidget()
  **/
 void GLWidget::initializeGL()
 {
+
     // Set up OpenGL
     glEnable(GL_TEXTURE_2D);
 
@@ -72,6 +92,12 @@ void GLWidget::initializeGL()
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
+    glClearColor(0.0f,0.0f,0.0f,0.0f);
+
+    glClear(GL_ACCUM_BUFFER_BIT);
+    m_particle = loadTexture(":/textures/particles/particle2.bmp");
+
+
     // Load resources, including creating shader programs and framebuffer objects
     initializeResources();
 
@@ -79,6 +105,9 @@ void GLWidget::initializeGL()
     m_timer.start(1000.0f / MAX_FPS);
 
     m_startTime = m_clock.elapsed();
+
+
+    //emit _glInit(); //leave this
 
 }
 
@@ -109,7 +138,7 @@ void GLWidget::initializeResources()
     cout << "Loaded framebuffer objects..." << endl;
 
     cout << " --- Finish Loading Resources ---" << endl;
-    
+
 }
 
 /**
@@ -212,6 +241,11 @@ void GLWidget::paintGL()
     m_prevTime = time;
     int width = this->width();
     int height = this->height();
+
+
+
+
+
     // Render the scene to a framebuffer
     m_framebufferObjects["fbo_0"]->bind();
     applyPerspectiveCamera(width, height);
@@ -291,30 +325,54 @@ void GLWidget::renderScene()
 
     // Render the dragon with the refraction shader bound
     glActiveTexture(GL_TEXTURE0);
-    m_shaderPrograms["refract"]->bind();
-    m_shaderPrograms["refract"]->setUniformValue("CubeMap", GL_TEXTURE0);
-    glPushMatrix();
-    glTranslatef(-1.25f, 0.f, 0.f);
-    glCallList(m_dragon.idx);
-    glPopMatrix();
-    m_shaderPrograms["refract"]->release();
+//    m_shaderPrograms["refract"]->bind();
+//    m_shaderPrograms["refract"]->setUniformValue("CubeMap", GL_TEXTURE0);
+//    glPushMatrix();
+//    glTranslatef(-1.25f, 0.f, 0.f);
+//    glCallList(m_dragon.idx);
+//    glPopMatrix();
+//    m_shaderPrograms["refract"]->release();
 
     int time = m_clock.elapsed();
     if(time - m_startTime >= 1000){
-        m_targets.push_back(Vector3(1.25f, m_targets.size()*1.5f, 0.f));
+        m_world->addEntity(new Target(Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 5), Vector2(0.f, 0.f), m_particle));
         m_startTime = time;
     }
 
-    for(unsigned int i = 0; i < m_targets.size(); i++){
+//    for(unsigned int i = 0; i < m_targets.size(); i++){
+//        // Render the dragon with the reflection shader bound
+//        m_shaderPrograms["reflect"]->bind();
+//        m_shaderPrograms["reflect"]->setUniformValue("CubeMap", GL_TEXTURE0);
+//        glPushMatrix();
+//        Vector3 targetPos = m_targets.at(i);
+//        glTranslatef(targetPos.x, targetPos.y, targetPos.z);
+//        glCallList(m_dragon.idx);
+//        glPopMatrix();
+//        m_shaderPrograms["reflect"]->release();
+
+//    }
+
+
+    for(int i = 0; i < m_world->getEntities().size(); i++){
         // Render the dragon with the reflection shader bound
         m_shaderPrograms["reflect"]->bind();
         m_shaderPrograms["reflect"]->setUniformValue("CubeMap", GL_TEXTURE0);
         glPushMatrix();
-        Vector3 targetPos = m_targets.at(i);
+        Vector3 targetPos = m_world->getEntities().at(i)->getPos();
         glTranslatef(targetPos.x, targetPos.y, targetPos.z);
+
+        glRotatef(m_world->getEntities().at(i)->getRotation().x, 0.0f, 1.0f, 0.0f);
+        glRotatef(m_world->getEntities().at(i)->getRotation().y, 0.0f, 0.0f, 1.0f);
         glCallList(m_dragon.idx);
         glPopMatrix();
         m_shaderPrograms["reflect"]->release();
+
+        if(m_showCollision){
+            m_world->getEntities().at(i)->onCollisionRender();
+        }
+
+        //m_world->getEntities().at(i)->onRender();
+
     }
 
     // Disable culling, depth testing and cube maps
@@ -322,6 +380,10 @@ void GLWidget::renderScene()
     glDisable(GL_DEPTH_TEST);
     glBindTexture(GL_TEXTURE_CUBE_MAP,0);
     glDisable(GL_TEXTURE_CUBE_MAP);
+
+    if(m_firstPersonMode){
+        m_world->onUpdate();
+    }
 }
 
 /**
@@ -362,12 +424,23 @@ void GLWidget::renderBlur(int width, int height)
 **/
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
-    Vector2 pos(event->x(), event->y());
-    if (event->buttons() & Qt::LeftButton || event->buttons() & Qt::RightButton)
-    {
-        m_camera.mouseMove(pos - m_prevMousePos);
+
+    if(m_firstPersonMode) {
+        if(m_originalMouse.x < 0 && m_originalMouse.y < 0)
+        {
+            m_originalMouse = Vector2(event->globalX() - event->x() + this->width()/2, event->globalY() - event->y() + this->height()/2);
+            QCursor::setPos(m_originalMouse.x, m_originalMouse.y);
+        }
+        else
+        {
+            Vector2 pos(event->globalX(), event->globalY());
+            m_camera.mouseMove(pos - m_originalMouse);
+
+            QCursor::setPos(m_originalMouse.x, m_originalMouse.y);
+        }
+        update();
     }
-    m_prevMousePos = pos;
+
 }
 
 /**
@@ -375,8 +448,42 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
  **/
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
-    m_prevMousePos.x = event->x();
-    m_prevMousePos.y = event->y();
+
+    if(!m_firstPersonMode){
+        setCursor(Qt::CrossCursor);
+        m_firstPersonMode = true;
+
+        m_originalMouse = Vector2(event->globalX() - event->x() + this->width()/2, event->globalY() - event->y() + this->height()/2);
+        QCursor::setPos(m_originalMouse.x, m_originalMouse.y);
+
+
+    }
+    else {
+        m_originalMouse = Vector2(event->globalX(), event->globalY());
+
+        Vector3 ray = getMouseRay();
+        cout<<ray<<"\n";
+
+        //fire logic
+        m_world->fireRay(m_camera.center, ray, m_camera, m_particle);
+
+        update();
+//        if(m_increment == 0.0f && !m_timer.isActive())
+//        {
+//            //start the timer if the increment is 0
+//            m_timer.start(1000.0f / m_fps);
+//            m_fired = true;
+//        }
+//        else
+//        {
+//            //reset the timer
+//            m_increment = 0.0f;
+//            m_fired = false;
+//            m_timer.stop();
+//        }
+//        update();
+    }
+
 }
 
 /**
@@ -476,14 +583,20 @@ void GLWidget::createBlurKernel(int radius, int width, int height,
  **/
 void GLWidget::keyPressEvent(QKeyEvent *event)
 {
-    switch(event->key())
-    {
-        case Qt::Key_S:
+    if(event->key() == Qt::Key_S){
         QImage qi = grabFrameBuffer(false);
         QString filter;
         QString fileName = QFileDialog::getSaveFileName(this, tr("Save Image"), "", tr("PNG Image (*.png)"), &filter);
         qi.save(QFileInfo(fileName).absoluteDir().absolutePath() + "/" + QFileInfo(fileName).baseName() + ".png", "PNG", 100);
-        break;
+    }
+    else if(event->key() == Qt::Key_C){
+        m_showCollision = !m_showCollision;
+    }
+    else if(event->key() == Qt::Key_Escape){
+
+        setCursor(Qt::ArrowCursor);
+        m_firstPersonMode = false;
+        m_originalMouse = Vector2(-1, -1);
     }
 }
 
@@ -503,16 +616,52 @@ void GLWidget::paintText()
 
     // QGLWidget's renderText takes xy coordinates, a string, and a font
     renderText(10, 20, "FPS: " + QString::number((int) (m_prevFps)), m_font);
-    renderText(10, 35, "S: Save screenshot", m_font);
+    renderText(10, 35, "FPS: " + QString::number((int) (m_world->getScore())), m_font);
+    renderText(10,50, "Esc: Pause", m_font);
+    if(m_showCollision){
+        renderText(10, 65, "C: Turn OFF collision detection display", m_font);
+    }
+    else{
+        renderText(10, 65, "C: Turn ON collision detection display", m_font);
+    }
+    renderText(10, 80, "S: Save screenshot", m_font);
 }
 
+Vector3 GLWidget::getMouseRay()
+{
+    Vector3 dir(-Vector3::fromAngles(m_camera.theta, m_camera.phi));
+    Vector3 eye(m_camera.center - dir * m_camera.zoom);
+
+    Vector3 ray = dir;
+    ray.normalize();
+    return ray;
+}
 
 /**
-  Specifies to Qt what to do when the widget needs to be updated.
-  We only want to repaint the onscreen objects.
-**/
-void GLWidget::tick()
+  * Loads the image at the given path and copies its data into an OpenGL texture.
+  * @return The unique ID of the texture generated by this function.
+  */
+GLuint GLWidget::loadTexture(const QString &path)
 {
-    m_increment++;
-    update();
+    QFile file(path);
+
+    QImage image, texture;
+    if(!file.exists()) return -1;
+    image.load(file.fileName());
+    texture = QGLWidget::convertToGLFormat(image);
+
+    glEnable(GL_TEXTURE_2D);
+
+    GLuint id = 0;
+    glGenTextures(1, &id);
+    glBindTexture(GL_TEXTURE_2D, id);
+
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, texture.width(), texture.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.bits());
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+
+    return id;
 }
+

@@ -18,7 +18,13 @@ HEADERS += lab/glwidget.h \
     math/vector.h \
     support/resourceloader.h \
     support/mainwindow.h \
-    support/camera.h
+    support/camera.h \
+    game/World.h \
+    game/Bullet.h \
+    game/particleemitter.h \
+    support/common.h \
+    game/Entity.h \
+    game/Target.h
 
 SOURCES += \
     lab/glwidget.cpp \
@@ -27,7 +33,12 @@ SOURCES += \
     support/resourceloader.cpp \
     support/mainwindow.cpp \
     support/main.cpp \
-    support/camera.cpp
+    support/camera.cpp \
+    game/World.cpp \
+    game/Bullet.cpp \
+    game/particleemitter.cpp \
+    game/Entity.cpp \
+    game/Target.cpp
 
 FORMS += mainwindow.ui \
     support/mainwindow.ui

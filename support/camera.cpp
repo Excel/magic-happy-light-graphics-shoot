@@ -8,7 +8,8 @@ void OrbitCamera::mouseMove(const Vector2 &delta)
     phi += delta.y * 0.01f;
 
     // Keep theta in [0, 2pi] and phi in [-pi/2, pi/2]
-    theta -= floorf(theta / M_2PI) * M_2PI;
+    //theta -= floorf(theta / M_2PI) * M_2PI;
+    theta = max(0.01f + M_PI, min(M_2PI - 0.01f, theta));
     phi = max(0.01f - M_PI / 2, min(M_PI / 2 - 0.01f, phi));
 }
 

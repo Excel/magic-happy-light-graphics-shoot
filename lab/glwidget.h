@@ -10,6 +10,7 @@
 #include "camera.h"
 #include "vector.h"
 #include "resourceloader.h"
+#include "game/World.h"
 
 class QGLShaderProgram;
 class QGLFramebufferObject;
@@ -32,7 +33,6 @@ protected:
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
-    void tick();
 
     // Initialization code
     void initializeResources();
@@ -40,6 +40,7 @@ protected:
     void createShaderPrograms();
     void createFramebufferObjects(int width, int height);
     void createBlurKernel(int radius, int width, int height, GLfloat* kernel, GLfloat* offsets);
+    GLuint loadTexture(const QString &path);
 
     // Drawing code
     void applyOrthogonalCamera(float width, float height);
@@ -50,19 +51,25 @@ protected:
     void renderScene();
     void paintText();
 
+    //Calculating code
+    Vector3 getMouseRay();
+
 private:
     QTimer m_timer;
     QTime m_clock;
     int m_prevTime;
     int m_startTime;
     float m_prevFps, m_fps;
-    Vector2 m_prevMousePos;
     OrbitCamera m_camera;
-    int m_increment;
     bool m_firstPersonMode, m_fired;
     int m_score;
 
-    std::vector<Vector3> m_targets;
+    Vector2 m_originalMouse;
+
+
+    World *m_world;
+
+    bool m_showCollision;
 
     // Resources
     QHash<QString, QGLShaderProgram *> m_shaderPrograms; // hash map of all shader programs
@@ -70,6 +77,7 @@ private:
     Model m_dragon; // dragon model
     GLuint m_skybox; // skybox call list ID
     GLuint m_cubeMap; // cubeMap texture ID
+    GLuint m_particle; //particle texture ID
     QFont m_font; // font for rendering text
 
 };
