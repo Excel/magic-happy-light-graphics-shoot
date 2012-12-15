@@ -26,7 +26,7 @@ Bullet::~Bullet(){
 void Bullet::onUpdate(){
     m_pos += m_dir * m_timestep;
     m_existence--;
-    //m_emitter->updateParticles();       //Move the particles
+    m_emitter->updateParticles();       //Move the particles
 }
 
 void Bullet::onCollide(Entity* e){

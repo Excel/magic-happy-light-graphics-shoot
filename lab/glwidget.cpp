@@ -391,7 +391,7 @@ void GLWidget::renderScene()
         }
 
         //attempt to draw the particle emitters
-       //e->onRender();
+       e->onRender();
 
     }
 
