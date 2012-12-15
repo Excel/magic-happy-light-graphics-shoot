@@ -164,10 +164,10 @@ void GLWidget::loadCubeMap()
 void GLWidget::createShaderPrograms()
 {
     const QGLContext *ctx = context();
-    m_shaderPrograms["reflect"] = ResourceLoader::newShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab09/shaders/reflect.vert", "/home/jqtran/course/cs123_labs/lab09/shaders/reflect.frag");
-    m_shaderPrograms["refract"] = ResourceLoader::newShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab09/shaders/refract.vert", "/home/jqtran/course/cs123_labs/lab09/shaders/refract.frag");
-    m_shaderPrograms["brightpass"] = ResourceLoader::newFragShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab09/shaders/brightpass.frag");
-    m_shaderPrograms["blur"] = ResourceLoader::newFragShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab09/shaders/blur.frag");
+    m_shaderPrograms["reflect"] = ResourceLoader::newShaderProgram(ctx, "shaders/reflect.vert", "shaders/reflect.frag");
+    m_shaderPrograms["refract"] = ResourceLoader::newShaderProgram(ctx, "shaders/refract.vert", "shaders/refract.frag");
+    m_shaderPrograms["brightpass"] = ResourceLoader::newFragShaderProgram(ctx, "shaders/brightpass.frag");
+    m_shaderPrograms["blur"] = ResourceLoader::newFragShaderProgram(ctx, "shaders/blur.frag");
 }
 
 /**
@@ -366,7 +366,7 @@ void GLWidget::renderScene()
         }
 
         //attempt to draw the particle emitters
-       //e->onRender();
+       e->onRender();
 
     }
 

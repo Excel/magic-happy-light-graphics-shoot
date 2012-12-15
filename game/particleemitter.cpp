@@ -98,13 +98,12 @@ void ParticleEmitter::updateParticles()
 void ParticleEmitter::drawParticles()
 {
     glBindTexture(GL_TEXTURE_2D, m_textureID);
+    glDepthMask(false);
     glEnable(GL_BLEND);
+     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+     glBegin(GL_QUADS);
     for(unsigned i = 0; i < m_maxParticles; ++i){
         if(m_particles[i].active){
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE);
-            glBegin(GL_QUADS);
-            glColor4f(m_particles[i].color.r, m_particles[i].color.g, m_particles[i].color.b, m_particles[i].life);
-            glDepthMask(false);
 
             glTexCoord2f(0, 0);
             glVertex3f(m_particles[i].pos.x, m_particles[i].pos.y, m_particles[i].pos.z);
@@ -115,11 +114,15 @@ void ParticleEmitter::drawParticles()
             glTexCoord2f(1.f, 0);
             glVertex3f(m_particles[i].pos.x+m_scale, m_particles[i].pos.y, m_particles[i].pos.z);
 
-            glDepthMask(true);
-            glEnd();
+
+
 
         }
     }
+    glEnd();
+    glDisable(GL_BLEND);
+
+    glDepthMask(true);
 
     //Put your code here
 }
