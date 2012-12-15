@@ -244,21 +244,6 @@ void GLWidget::paintGL()
     int width = this->width();
     int height = this->height();
 
-    /*!
-        don't use this
-      */
-//    m_emitter->updateParticles();       //Move the particles
-//    m_emitter->drawParticles();         //Draw the particles
-
-//    glAccum(GL_MULT, 0.9);
-//    glAccum(GL_ACCUM, 0.1);
-//    glAccum(GL_RETURN, 1);
-//    glFlush();
-//    swapBuffers();
-
-
-
-
     // Render the scene to a framebuffer
     m_framebufferObjects["fbo_0"]->bind();
     applyPerspectiveCamera(width, height);
@@ -277,9 +262,8 @@ void GLWidget::paintGL()
     renderTexturedQuad(width, height);
     glBindTexture(GL_TEXTURE_2D, 0);
 
+
     paintText();
-
-
 }
 
 void GLWidget::applyShaders(){
