@@ -4,16 +4,17 @@ using std::cout;
 
 Bullet::Bullet(Vector3 pos, Vector3 dir, Vector2 rotation, GLuint textureID) : Entity(pos, dir, rotation, textureID){
 
-    m_existence = 50;
-    m_timestep = 3E-1;
-    //m_timestep = 1E-3;
+    m_existence = 150;
+    m_timestep = 1E-1;
+    //m_timestep = 1E-5;
 
     setColRadius(0.50f);
 
     m_colType = COLLISION_SPHERE;
     m_enemy = false;
 
-    setShader("reflect");
+    setModel("sphere");
+    setShader("psycho");
 
 }
 

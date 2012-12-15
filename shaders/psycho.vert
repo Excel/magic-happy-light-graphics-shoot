@@ -1,5 +1,3 @@
-varying float intensity;
-
 uniform float time;
     
 varying vec3 vertex;	// The position of the vertex, in eye space
@@ -21,15 +19,15 @@ void main()
     //float scale = computeScale(time);
     
     vec4 vertex = gl_Vertex;
-    vertex.z = vertex.z * computeScale(time, 0);
-    vertex.x = vertex.x * computeScale(time, 100);
+    vertex.z = vertex.z * computeScale(time, 0.0);
+    vertex.x = vertex.x * computeScale(time, 100.0);
     float ds = vertex.x + vertex.x + vertex.z + vertex.z;
     vertex.y += sin(ds*sin(time));
-    vertex.x += cos(time + 90);
+    vertex.x += cos(time + 90.0);
         
     gl_Position = gl_ModelViewProjectionMatrix * vertex;
     
     light = normalize(gl_LightSource[0].position.xyz - vertex);
     eye = -vertex;
     normal = normalize(gl_NormalMatrix * gl_Normal);    
-} 
+}

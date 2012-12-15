@@ -1,6 +1,3 @@
-varying float intensity;
-
-varying vec4 color;
 uniform float time;
     
 varying vec3 vertex;		// The vector from the eye to the vertex
@@ -18,7 +15,8 @@ float colorShift(float t, float s)
 
 void main()
 {	
-    
+    vec4 color;
+    color.w = 0;
     color.x = colorShift(time, 0);
     color.y = colorShift(time, 120);
     color.z = colorShift(time, 240);

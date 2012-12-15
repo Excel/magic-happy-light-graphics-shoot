@@ -3,6 +3,9 @@
 
 #include "vector.h"
 #include "particleemitter.h"
+#include "glm.h"
+
+#include "resourceloader.h"
 
 class Entity{
 public:
@@ -46,7 +49,8 @@ public:
 
     float getColRadius() {return m_colRadius;}
     void setColRadius(float r) {m_colRadius = r;}
-    //void setModel(Model* model) {m_model = model;}
+    QString getModel() {return m_model;}
+    void setModel(QString model) {m_model = model;}
     ParticleEmitter * m_emitter;
 
 protected:
@@ -58,7 +62,7 @@ protected:
 
 
     //Rendering
-    //Model *m_model;
+    QString m_model;
     QString m_shader;
 
     //Collision

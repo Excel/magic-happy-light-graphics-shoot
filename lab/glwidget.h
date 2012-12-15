@@ -38,6 +38,7 @@ protected:
     // Initialization code
     void initializeResources();
     void loadCubeMap();
+    void createModels();
     void createShaderPrograms();
     void createFramebufferObjects(int width, int height);
     void createBlurKernel(int radius, int width, int height, GLfloat* kernel, GLfloat* offsets);
@@ -61,6 +62,7 @@ private:
     QTime m_clock;
     int m_prevTime;
     int m_startTime;
+    int m_spawnTime;
     float m_prevFps, m_fps;
     OrbitCamera m_camera;
     bool m_firstPersonMode, m_mousePressed, m_autofire;
@@ -75,9 +77,11 @@ private:
     bool m_showCollision;
 
     // Resources
+    QHash<QString, Model> m_models; // hash map of all shader programs
     QHash<QString, QGLShaderProgram *> m_shaderPrograms; // hash map of all shader programs
     QHash<QString, QGLFramebufferObject *> m_framebufferObjects; // hash map of all framebuffer objects
     Model m_dragon; // dragon model
+    Model m_sphere; // sphere model
     GLuint m_skybox; // skybox call list ID
     GLuint m_cubeMap; // cubeMap texture ID
     GLuint m_particle; //particle texture ID

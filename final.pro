@@ -49,6 +49,9 @@ OTHER_FILES += \
     shaders/reflect.vert \
     shaders/reflect.frag \
     shaders/brightpass.frag \
-    shaders/blur.frag
+    shaders/blur.frag \
+    shaders/psycho.frag \
+    shaders/psycho.vert \
+    shaders/psycho.vars
 
 RESOURCES +=

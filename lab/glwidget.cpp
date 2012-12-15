@@ -28,7 +28,7 @@ static const int MAX_FPS = 120;
   Constructor.  Initialize all member variables here.
  **/
 GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent),
-    m_timer(this), m_prevTime(0), m_prevFps(0.f), m_fps(0.f),
+    m_timer(this), m_prevTime(0), m_spawnTime(0), m_prevFps(0.f), m_fps(0.f),
     m_font("Deja Vu Sans Mono", 8, 4)
 {
 
@@ -69,6 +69,7 @@ GLWidget::~GLWidget()
     glDeleteLists(m_skybox, 1);
     const_cast<QGLContext *>(context())->deleteTexture(m_cubeMap);
     glmDelete(m_dragon.model);
+    glmDelete(m_sphere.model);
 
     delete m_world;
    // delete m_emitter;
@@ -120,8 +121,8 @@ void GLWidget::initializeResources()
     // by the video card.  But that's a pain to do so we're not going to.
     cout << "--- Loading Resources ---" << endl;
 
-    m_dragon = ResourceLoader::loadObjModel("/course/cs123/bin/models/xyzrgb_dragon.obj");
-    cout << "Loaded dragon..." << endl;
+    createModels();
+    cout << "Loaded models..." << endl;
 
     m_skybox = ResourceLoader::loadSkybox();
     cout << "Loaded skybox..." << endl;
@@ -159,6 +160,20 @@ void GLWidget::loadCubeMap()
 }
 
 /**
+  Create models.
+  **/
+
+void GLWidget::createModels()
+{
+    m_dragon = ResourceLoader::loadObjModel("/course/cs123/bin/models/xyzrgb_dragon.obj");
+    m_sphere = ResourceLoader::loadObjModel("/course/cs123/data/mesh/sphere.obj");
+
+    m_models["dragon"] = m_dragon;
+    m_models["sphere"] = m_sphere;
+
+}
+
+/**
   Create shader programs.
  **/
 void GLWidget::createShaderPrograms()
@@ -168,6 +183,13 @@ void GLWidget::createShaderPrograms()
     m_shaderPrograms["refract"] = ResourceLoader::newShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab09/shaders/refract.vert", "/home/jqtran/course/cs123_labs/lab09/shaders/refract.frag");
     m_shaderPrograms["brightpass"] = ResourceLoader::newFragShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab09/shaders/brightpass.frag");
     m_shaderPrograms["blur"] = ResourceLoader::newFragShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab09/shaders/blur.frag");
+    m_shaderPrograms["psycho"] = ResourceLoader::newShaderProgram(ctx, "/home/jqtran/course/cs123_final/shaders/psycho.vert", "/home/jqtran/course/cs123_final/shaders/psycho.frag");
+
+//    m_shaderPrograms["reflect"] = ResourceLoader::newShaderProgram(ctx, "shaders/reflect.vert", "shaders/reflect.frag");
+//    m_shaderPrograms["refract"] = ResourceLoader::newShaderProgram(ctx, "shaders/refract.vert", "shaders/refract.frag");
+//    m_shaderPrograms["brightpass"] = ResourceLoader::newFragShaderProgram(ctx, "shaders/brightpass.frag");
+//    m_shaderPrograms["blur"] = ResourceLoader::newFragShaderProgram(ctx, "shaders/blur.frag");
+//    m_shaderPrograms["psycho"] = ResourceLoader::newShaderProgram(ctx, "/shaders/psycho.vert", "shaders/psycho.frag");
 }
 
 /**
@@ -263,6 +285,8 @@ void GLWidget::paintGL()
     glBindTexture(GL_TEXTURE_2D, 0);
 
 
+
+
     paintText();
 }
 
@@ -329,11 +353,11 @@ void GLWidget::renderScene()
       just make new targets at the moment until bezier curves work
       */
     if(m_firstPersonMode){
-        if(time - m_startTime >= 1000){
+        if((time - m_spawnTime) >= 1000){
             Target* t = new Target(Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 5), Vector2(0.f, 0.f), m_particle);
             t->setWorld(m_world);
             m_world->addEntity(t);
-            m_startTime = time;
+            m_spawnTime = time;
         }
     }
 
@@ -347,6 +371,7 @@ void GLWidget::renderScene()
         // Render the dragon with the shader specified by the entity
         m_shaderPrograms[e->getShader()]->bind();
         m_shaderPrograms[e->getShader()]->setUniformValue("CubeMap", GL_TEXTURE0);
+        m_shaderPrograms["psycho"]->setUniformValue("time", (m_clock.elapsed() - m_startTime)/1000.f);
         glPushMatrix();
 
         //translate by the position and rotate by theta and phi
@@ -356,7 +381,7 @@ void GLWidget::renderScene()
         glRotatef(e->getRotation().y, 0.0f, 0.0f, 1.0f);
 
         //draw the model
-        glCallList(m_dragon.idx);
+        glCallList(m_models[e->getModel()].idx);
         glPopMatrix();
         m_shaderPrograms[e->getShader()]->release();
 

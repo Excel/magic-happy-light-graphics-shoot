@@ -9,6 +9,7 @@ Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID) : Entity(pos, Ve
     m_colType = COLLISION_SPHERE;
     m_enemy = true;
 
+    setModel("dragon");
     setShader("refract");
 }
 
