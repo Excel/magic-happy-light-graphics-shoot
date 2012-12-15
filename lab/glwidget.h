@@ -32,6 +32,7 @@ protected:
     void wheelEvent(QWheelEvent *event);
     void mouseMoveEvent(QMouseEvent *event);
     void mousePressEvent(QMouseEvent *event);
+    void mouseReleaseEvent(QMouseEvent *event);
     void keyPressEvent(QKeyEvent *event);
 
     // Initialization code
@@ -51,8 +52,9 @@ protected:
     void renderScene();
     void paintText();
 
-    //Calculating code
+    //Game code
     Vector3 getMouseRay();
+    void shootRay();
 
 private:
     QTimer m_timer;
@@ -61,12 +63,13 @@ private:
     int m_startTime;
     float m_prevFps, m_fps;
     OrbitCamera m_camera;
-    bool m_firstPersonMode, m_fired;
+    bool m_firstPersonMode, m_mousePressed, m_autofire;
     int m_score;
 
     Vector2 m_originalMouse;
 
-
+    /** The particle emitter containing the particles to draw */
+    ParticleEmitter *m_emitter;
     World *m_world;
 
     bool m_showCollision;

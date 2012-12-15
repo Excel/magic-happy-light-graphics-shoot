@@ -13,6 +13,8 @@ Bullet::Bullet(Vector3 pos, Vector3 dir, Vector2 rotation, GLuint textureID) : E
     m_colType = COLLISION_SPHERE;
     m_enemy = false;
 
+    setShader("reflect");
+
 }
 
 Bullet::~Bullet(){

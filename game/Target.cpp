@@ -8,6 +8,8 @@ Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID) : Entity(pos, Ve
 
     m_colType = COLLISION_SPHERE;
     m_enemy = true;
+
+    setShader("refract");
 }
 
 Target::~Target(){
@@ -29,7 +31,7 @@ void Target::onCollide(Entity* e){
         //assume they are spheres at the mo
         if((e->getPos() - m_pos).length() < e->getColRadius() + m_colRadius){
             m_hit = true;
-            //m_world->setScore(m_world->getScore()+1);
+            m_world->setScore(m_world->getScore()+1);
         }
 
 

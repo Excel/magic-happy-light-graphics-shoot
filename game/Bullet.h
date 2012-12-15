@@ -21,7 +21,7 @@ public:
 protected:
     int m_existence;
 
-
+    /*! how fast this thing goes with respect to the direction */
     float m_timestep;
 
 

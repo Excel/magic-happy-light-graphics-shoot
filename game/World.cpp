@@ -7,7 +7,7 @@ World::World(){
 
     m_score = 0;
     m_cooldown = 0;
-    m_maxCooldown = 5;
+    m_maxCooldown = 20;
 
 }
 

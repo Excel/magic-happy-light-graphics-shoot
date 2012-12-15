@@ -46,10 +46,11 @@ GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent),
     m_originalMouse = Vector2(-1, -1);
     m_firstPersonMode = false;
 
+    m_autofire = false;
+    m_mousePressed = false;
+
     m_world = new World();
     m_showCollision = false;
-
-    m_world->addEntity(new Target(Vector3(-1.25f, 0.f, 0.f), Vector2(0.f, 0.f), m_particle));
 
     setCursor(Qt::ArrowCursor);
 
@@ -70,6 +71,7 @@ GLWidget::~GLWidget()
     glmDelete(m_dragon.model);
 
     delete m_world;
+   // delete m_emitter;
 }
 
 /**
@@ -92,10 +94,7 @@ void GLWidget::initializeGL()
 
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-    glClearColor(0.0f,0.0f,0.0f,0.0f);
-
     glClear(GL_ACCUM_BUFFER_BIT);
-    m_particle = loadTexture(":/textures/particles/particle2.bmp");
 
 
     // Load resources, including creating shader programs and framebuffer objects
@@ -105,7 +104,6 @@ void GLWidget::initializeGL()
     m_timer.start(1000.0f / MAX_FPS);
 
     m_startTime = m_clock.elapsed();
-
 
     //emit _glInit(); //leave this
 
@@ -136,6 +134,10 @@ void GLWidget::initializeResources()
 
     createFramebufferObjects(width(), height());
     cout << "Loaded framebuffer objects..." << endl;
+
+    m_particle = loadTexture(":/textures/particles/particle2.bmp");
+    //m_emitter = new ParticleEmitter(m_particle);
+    cout << "Loaded particle textures..." << endl;
 
     cout << " --- Finish Loading Resources ---" << endl;
 
@@ -242,6 +244,17 @@ void GLWidget::paintGL()
     int width = this->width();
     int height = this->height();
 
+    /*!
+        don't use this
+      */
+//    m_emitter->updateParticles();       //Move the particles
+//    m_emitter->drawParticles();         //Draw the particles
+
+//    glAccum(GL_MULT, 0.9);
+//    glAccum(GL_ACCUM, 0.1);
+//    glAccum(GL_RETURN, 1);
+//    glFlush();
+//    swapBuffers();
 
 
 
@@ -325,53 +338,51 @@ void GLWidget::renderScene()
 
     // Render the dragon with the refraction shader bound
     glActiveTexture(GL_TEXTURE0);
-//    m_shaderPrograms["refract"]->bind();
-//    m_shaderPrograms["refract"]->setUniformValue("CubeMap", GL_TEXTURE0);
-//    glPushMatrix();
-//    glTranslatef(-1.25f, 0.f, 0.f);
-//    glCallList(m_dragon.idx);
-//    glPopMatrix();
-//    m_shaderPrograms["refract"]->release();
 
     int time = m_clock.elapsed();
-    if(time - m_startTime >= 1000){
-        m_world->addEntity(new Target(Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 5), Vector2(0.f, 0.f), m_particle));
-        m_startTime = time;
+
+    /*!
+      just make new targets at the moment until bezier curves work
+      */
+    if(m_firstPersonMode){
+        if(time - m_startTime >= 1000){
+            Target* t = new Target(Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 5), Vector2(0.f, 0.f), m_particle);
+            t->setWorld(m_world);
+            m_world->addEntity(t);
+            m_startTime = time;
+        }
     }
 
-//    for(unsigned int i = 0; i < m_targets.size(); i++){
-//        // Render the dragon with the reflection shader bound
-//        m_shaderPrograms["reflect"]->bind();
-//        m_shaderPrograms["reflect"]->setUniformValue("CubeMap", GL_TEXTURE0);
-//        glPushMatrix();
-//        Vector3 targetPos = m_targets.at(i);
-//        glTranslatef(targetPos.x, targetPos.y, targetPos.z);
-//        glCallList(m_dragon.idx);
-//        glPopMatrix();
-//        m_shaderPrograms["reflect"]->release();
-
-//    }
-
-
+    /**
+      for all entities (bullets, targets), draw them
+      */
     for(int i = 0; i < m_world->getEntities().size(); i++){
-        // Render the dragon with the reflection shader bound
-        m_shaderPrograms["reflect"]->bind();
-        m_shaderPrograms["reflect"]->setUniformValue("CubeMap", GL_TEXTURE0);
-        glPushMatrix();
-        Vector3 targetPos = m_world->getEntities().at(i)->getPos();
-        glTranslatef(targetPos.x, targetPos.y, targetPos.z);
+        Entity* e = m_world->getEntities().at(i);
 
-        glRotatef(m_world->getEntities().at(i)->getRotation().x, 0.0f, 1.0f, 0.0f);
-        glRotatef(m_world->getEntities().at(i)->getRotation().y, 0.0f, 0.0f, 1.0f);
+
+        // Render the dragon with the shader specified by the entity
+        m_shaderPrograms[e->getShader()]->bind();
+        m_shaderPrograms[e->getShader()]->setUniformValue("CubeMap", GL_TEXTURE0);
+        glPushMatrix();
+
+        //translate by the position and rotate by theta and phi
+        Vector3 targetPos = e->getPos();
+        glTranslatef(targetPos.x, targetPos.y, targetPos.z);
+        glRotatef(e->getRotation().x, 0.0f, 1.0f, 0.0f);
+        glRotatef(e->getRotation().y, 0.0f, 0.0f, 1.0f);
+
+        //draw the model
         glCallList(m_dragon.idx);
         glPopMatrix();
-        m_shaderPrograms["reflect"]->release();
+        m_shaderPrograms[e->getShader()]->release();
 
+        //draw the collision sphere
         if(m_showCollision){
-            m_world->getEntities().at(i)->onCollisionRender();
+            e->onCollisionRender();
         }
 
-        //m_world->getEntities().at(i)->onRender();
+        //attempt to draw the particle emitters
+       //e->onRender();
 
     }
 
@@ -381,8 +392,14 @@ void GLWidget::renderScene()
     glBindTexture(GL_TEXTURE_CUBE_MAP,0);
     glDisable(GL_TEXTURE_CUBE_MAP);
 
+    //update the entities' positions/collisions/whatnot
     if(m_firstPersonMode){
         m_world->onUpdate();
+
+        //shoot ray if mouse held down and if this is a good idea
+        if(m_mousePressed && m_autofire){
+            shootRay();
+        }
     }
 }
 
@@ -421,6 +438,7 @@ void GLWidget::renderBlur(int width, int height)
 
 /**
   Called when the mouse is dragged.  Rotates the camera based on mouse movement.
+  Centers the mouse to the middle of the screen.
 **/
 void GLWidget::mouseMoveEvent(QMouseEvent *event)
 {
@@ -444,7 +462,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent *event)
 }
 
 /**
-  Record a mouse press position.
+  Record a mouse press position. Shoots a ray if the game is not paused.
  **/
 void GLWidget::mousePressEvent(QMouseEvent *event)
 {
@@ -456,33 +474,24 @@ void GLWidget::mousePressEvent(QMouseEvent *event)
         m_originalMouse = Vector2(event->globalX() - event->x() + this->width()/2, event->globalY() - event->y() + this->height()/2);
         QCursor::setPos(m_originalMouse.x, m_originalMouse.y);
 
-
     }
     else {
+        //shoots a bullet
         m_originalMouse = Vector2(event->globalX(), event->globalY());
 
-        Vector3 ray = getMouseRay();
-        cout<<ray<<"\n";
-
-        //fire logic
-        m_world->fireRay(m_camera.center, ray, m_camera, m_particle);
+        shootRay();
 
         update();
-//        if(m_increment == 0.0f && !m_timer.isActive())
-//        {
-//            //start the timer if the increment is 0
-//            m_timer.start(1000.0f / m_fps);
-//            m_fired = true;
-//        }
-//        else
-//        {
-//            //reset the timer
-//            m_increment = 0.0f;
-//            m_fired = false;
-//            m_timer.stop();
-//        }
-//        update();
     }
+
+}
+
+/**
+  Called when the mouse is released. Helps with turning off autofire.
+ **/
+void GLWidget::mouseReleaseEvent(QMouseEvent *event){
+    m_mousePressed = false;
+    m_originalMouse = Vector2(event->globalX() - event->x() + this->width()/2, event->globalY() - event->y() + this->height()/2);
 
 }
 
@@ -493,7 +502,7 @@ void GLWidget::wheelEvent(QWheelEvent *event)
 {
     if (event->orientation() == Qt::Vertical)
     {
-        m_camera.mouseWheel(event->delta());
+        //m_camera.mouseWheel(event->delta());
     }
 }
 
@@ -590,10 +599,11 @@ void GLWidget::keyPressEvent(QKeyEvent *event)
         qi.save(QFileInfo(fileName).absoluteDir().absolutePath() + "/" + QFileInfo(fileName).baseName() + ".png", "PNG", 100);
     }
     else if(event->key() == Qt::Key_C){
+        //toggle collision display
         m_showCollision = !m_showCollision;
     }
     else if(event->key() == Qt::Key_Escape){
-
+        //pause the game
         setCursor(Qt::ArrowCursor);
         m_firstPersonMode = false;
         m_originalMouse = Vector2(-1, -1);
@@ -616,7 +626,7 @@ void GLWidget::paintText()
 
     // QGLWidget's renderText takes xy coordinates, a string, and a font
     renderText(10, 20, "FPS: " + QString::number((int) (m_prevFps)), m_font);
-    renderText(10, 35, "FPS: " + QString::number((int) (m_world->getScore())), m_font);
+    renderText(10, 35, "Score: " + QString::number((int) (m_world->getScore())), m_font);
     renderText(10,50, "Esc: Pause", m_font);
     if(m_showCollision){
         renderText(10, 65, "C: Turn OFF collision detection display", m_font);
@@ -629,12 +639,20 @@ void GLWidget::paintText()
 
 Vector3 GLWidget::getMouseRay()
 {
+    //get the direction of the center to the mouse point
     Vector3 dir(-Vector3::fromAngles(m_camera.theta, m_camera.phi));
-    Vector3 eye(m_camera.center - dir * m_camera.zoom);
+    //Vector3 eye(m_camera.center - dir * m_camera.zoom);
 
     Vector3 ray = dir;
     ray.normalize();
     return ray;
+}
+void GLWidget::shootRay(){
+    //fire a bullet
+    Vector3 ray = getMouseRay();
+
+    m_mousePressed = true;
+    m_world->fireRay(m_camera.center, ray, m_camera, m_particle);
 }
 
 /**

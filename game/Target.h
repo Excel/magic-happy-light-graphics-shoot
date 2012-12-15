@@ -24,6 +24,8 @@ public:
 protected:
     World* m_world;
     int m_existence;
+
+    /*! did this thing get hit by a bullet */
     bool m_hit;
 };
 

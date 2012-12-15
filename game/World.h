@@ -16,8 +16,10 @@ public:
     int getScore() {return m_score;}
     void setScore(int score){m_score = score;}
 
+    /*! shoots a bullet in the target direction */
     void fireRay(Vector3 pos, Vector3 ray, const OrbitCamera &camera, GLuint textureID);
 
+    /*! updates the entities in the world */
     void onUpdate();
     QList<Entity* > getEntities() {return m_entities;}
 
@@ -26,11 +28,10 @@ public:
 protected:
 
     //Resources
-
-    int m_score;
-    int m_cooldown;
-    int m_maxCooldown;
-    QList<Entity* > m_entities;
+    int m_score;    // current score
+    int m_cooldown; // cooldown of weapon
+    int m_maxCooldown;  // max cooldown of weapon
+    QList<Entity* > m_entities; // bullets, targets, special targets, whatever man
 };
 
 
