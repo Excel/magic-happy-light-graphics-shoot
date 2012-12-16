@@ -183,6 +183,7 @@ void GLWidget::createShaderPrograms()
     m_shaderPrograms["refract"] = ResourceLoader::newShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab09/shaders/refract.vert", "/home/jqtran/course/cs123_labs/lab09/shaders/refract.frag");
     m_shaderPrograms["brightpass"] = ResourceLoader::newFragShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab09/shaders/brightpass.frag");
     m_shaderPrograms["blur"] = ResourceLoader::newFragShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab09/shaders/blur.frag");
+   // m_shaderPrograms["psycho"] = ResourceLoader::newShaderProgram(ctx, "/home/jqtran/course/cs123_labs/lab07/pulse.vert", "/home/jqtran/course/cs123_labs/lab07/pulse.frag");
     m_shaderPrograms["psycho"] = ResourceLoader::newShaderProgram(ctx, "/home/jqtran/course/cs123_final/shaders/psycho.vert", "/home/jqtran/course/cs123_final/shaders/psycho.frag");
 
 //    m_shaderPrograms["reflect"] = ResourceLoader::newShaderProgram(ctx, "shaders/reflect.vert", "shaders/reflect.frag");
@@ -371,7 +372,7 @@ void GLWidget::renderScene()
         // Render the dragon with the shader specified by the entity
         m_shaderPrograms[e->getShader()]->bind();
         m_shaderPrograms[e->getShader()]->setUniformValue("CubeMap", GL_TEXTURE0);
-        m_shaderPrograms["psycho"]->setUniformValue("time", (m_clock.elapsed() - m_startTime)/1000.f);
+        m_shaderPrograms["psycho"]->setUniformValue("time", (m_clock.elapsed() - m_startTime)/500.f);
         glPushMatrix();
 
         //translate by the position and rotate by theta and phi
@@ -511,7 +512,7 @@ void GLWidget::wheelEvent(QWheelEvent *event)
 {
     if (event->orientation() == Qt::Vertical)
     {
-        //m_camera.mouseWheel(event->delta());
+        m_camera.mouseWheel(event->delta());
     }
 }
 

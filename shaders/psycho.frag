@@ -10,16 +10,16 @@ uniform samplerCube envMap;	// The cube map containing the environment to reflec
 
 float colorShift(float t, float s)
 {
-    return .5 + .5 * sin(4*(t + s));
+    return .5 + .5 * sin(4.0*(t + s));
 }
 
 void main()
 {	
     vec4 color;
-    color.w = 0;
-    color.x = colorShift(time, 0);
-    color.y = colorShift(time, 120);
-    color.z = colorShift(time, 240);
+    color.w = 0.0;
+    color.x = colorShift(time, 0.0);
+    color.y = colorShift(time, 120.0);
+    color.z = colorShift(time, 240.0);
     
     
     vec3 e = normalize(eye);
@@ -28,11 +28,11 @@ void main()
     vec3 i = normalize(v - e);
     vec3 l = normalize(light);
     
-    vec3 look = -gl_ModelViewMatrix * vec4(reflect(-l, n), 0);
+    vec4 look = -gl_ModelViewMatrix * vec4(reflect(-l, n), 0);
 
 
 	
-    gl_FragColor = .6*textureCube(envMap, look) + .4*color;
+    gl_FragColor = .6*textureCube(envMap, look.xyz) + .4*color;
     
     
 }

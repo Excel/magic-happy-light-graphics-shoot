@@ -1,6 +1,6 @@
 QT += core gui opengl
 
-TARGET = bloom_lab
+TARGET = final
 TEMPLATE = app
 
 INCLUDEPATH += lab \
