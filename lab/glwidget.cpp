@@ -383,7 +383,7 @@ void GLWidget::renderScene()
       */
     if(m_firstPersonMode){
         if((time - m_spawnTime) >= 1000){
-            Target* t = new Target(Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 5), Vector2(0.f, 0.f), m_particle);
+            Target* t = new Target(Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 5), Vector2(0.f, 0.f), m_particle, m_dragon);
             t->setWorld(m_world);
             m_world->addEntity(t);
             m_spawnTime = time;
@@ -728,7 +728,7 @@ void GLWidget::shootRay(){
     Vector3 ray = getMouseRay();
 
     m_mousePressed = true;
-    m_world->fireRay(m_camera.center, ray, m_camera, m_particle);
+    m_world->fireRay(m_camera.center, ray, m_camera, m_particle, m_dragon);
 }
 
 /**

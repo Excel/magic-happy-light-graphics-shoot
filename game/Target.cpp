@@ -1,16 +1,44 @@
 #include "Target.h"
 
 
-Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID) : Entity(pos, Vector3(0,0,0), rotation, textureID){
+Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetModel) : Entity(pos, Vector3(0,0,0), rotation, textureID){
     m_existence = 1;
     m_hit = false;
     setColRadius(0.50f);
 
-    m_colType = COLLISION_SPHERE;
+    m_colType = COLLISION_BOX;
     m_enemy = true;
 
     setModel("dragon");
+    m_model = targetModel;
     setShader("refract");
+
+    for(int i = 0; i < m_model.model->numvertices; i++)
+    {
+        if(i%3 == 0)
+        {
+            if (m_min.x > m_model.model->vertices[i])
+                m_min.x = m_model.model->vertices[i];
+            else if (m_max.x < m_model.model->vertices[i])
+                m_max.x = m_model.model->vertices[i];
+
+        }
+        else if(i%3 == 1)
+        {
+            if (m_min.y > m_model.model->vertices[i])
+                m_min.y = m_model.model->vertices[i];
+            else if (m_max.y < m_model.model->vertices[i])
+                m_max.y = m_model.model->vertices[i];
+
+        }
+        else if(i%3 == 2)
+        {
+            if (m_min.z > m_model.model->vertices[i])
+                m_min.z = m_model.model->vertices[i];
+            else if (m_max.z < m_model.model->vertices[i])
+                m_max.z = m_model.model->vertices[i];
+        }
+    }
 }
 
 Target::~Target(){
@@ -60,6 +88,45 @@ void Target::onCollisionRender(){
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
         glLineWidth(1.f);
         glColor3f(1.0f, 1.0f, 1.0f);
+    }
+    else if(m_colType == COLLISION_BOX){
+
+
+        glColor3f(1.f, 1.f, 1.f);
+        glPushMatrix();
+        glTranslatef(m_pos.x, m_pos.y, m_pos.z);
+        glRotatef(m_rotation.x, 0.0f, 1.0f, 0.0f);
+        glRotatef(m_rotation.y, 0.0f, 0.0f, 1.0f);
+
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(m_max.x, m_max.y, m_min.z);
+        glVertex3f(m_min.x, m_max.y, m_min.z);
+        glVertex3f(m_min.x, m_min.y, m_min.z);
+        glVertex3f(m_max.x, m_min.y, m_min.z);
+        glEnd();
+
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(m_max.x, m_min.y, m_max.z);
+        glVertex3f(m_max.x, m_max.y, m_max.z);
+        glVertex3f(m_min.x, m_max.y, m_max.z);
+        glVertex3f(m_min.x, m_min.y, m_max.z);
+        glEnd();
+
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(m_max.x, m_max.y, m_min.z);
+        glVertex3f(m_max.x, m_max.y, m_max.z);
+        glVertex3f(m_min.x, m_max.y, m_max.z);
+        glVertex3f(m_min.x, m_max.y, m_min.z);
+        glEnd();
+
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(m_max.x, m_min.y, m_max.z);
+        glVertex3f(m_min.x, m_min.y, m_max.z);
+        glVertex3f(m_min.x, m_min.y, m_min.z);
+        glVertex3f(m_max.x, m_min.y, m_min.z);
+        glEnd();
+
+        glPopMatrix();
     }
 }
 

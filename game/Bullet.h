@@ -7,7 +7,7 @@
 class Bullet : public Entity {
 public:
 
-    Bullet(Vector3 pos, Vector3 ray, Vector2 rotation, GLuint textureID);
+    Bullet(Vector3 pos, Vector3 ray, Vector2 rotation, GLuint textureID, Model bulletModel);
 
     virtual ~Bullet();
 
@@ -17,6 +17,9 @@ public:
     virtual void onCollisionRender();
 
     bool isDone();
+
+    Model m_model; // bullet model
+
 
 protected:
     int m_existence;
