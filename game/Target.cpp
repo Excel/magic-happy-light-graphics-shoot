@@ -13,8 +13,9 @@ Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetMode
     m_model = targetModel;
     setShader("refract");
 
-    for(int i = 0; i < m_model.model->numvertices; i++)
+    for(int i = 0; i < 3*m_model.model->numvertices; i++)
     {
+
         if(i%3 == 0)
         {
             if (m_min.x > m_model.model->vertices[i])

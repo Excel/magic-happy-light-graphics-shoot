@@ -4,8 +4,8 @@ using std::cout;
 
 Bullet::Bullet(Vector3 pos, Vector3 dir, Vector2 rotation, GLuint textureID, Model bulletModel) : Entity(pos, dir, rotation, textureID){
 
-    m_existence = 150;
-    m_timestep = 1E-1;
+    m_existence = 250;
+    m_timestep = 2E-1;
     //m_timestep = 1E-5;
 
 
