@@ -54,4 +54,5 @@ OTHER_FILES += \
     shaders/psycho.vert \
     shaders/psycho.vars
 
-RESOURCES +=
+RESOURCES += \
+    resources.qrc

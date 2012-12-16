@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>shaders/blur.frag</file>
+        <file>shaders/brightpass.frag</file>
+        <file>shaders/psycho.frag</file>
+        <file>shaders/psycho.vert</file>
+        <file>shaders/reflect.frag</file>
+        <file>shaders/refract.frag</file>
+        <file>shaders/refract.vert</file>
+        <file>shaders/reflect.vert</file>
+    </qresource>
+</RCC>
