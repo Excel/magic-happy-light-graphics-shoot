@@ -18,7 +18,7 @@ public:
     void setScore(int score){m_score = score;}
 
     /*! shoots a bullet in the target direction */
-    void fireRay(Vector3 pos, Vector3 ray, const OrbitCamera &camera, GLuint textureID);
+    void fireRay(Vector3 pos, Vector3 ray, const OrbitCamera &camera, GLuint textureID, Model bulletModel);
 
     /*! updates the entities in the world */
     void onUpdate();

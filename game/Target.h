@@ -8,7 +8,7 @@
 class Target : public Entity {
 public:
 
-    Target(Vector3 pos, Vector2 rotation, GLuint textureID);
+    Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetModel);
 
     virtual ~Target();
 
@@ -20,6 +20,8 @@ public:
     void setWorld(World* w) {m_world = w;}
 
     bool isDone();
+
+    Model m_model;
 
 protected:
     World* m_world;

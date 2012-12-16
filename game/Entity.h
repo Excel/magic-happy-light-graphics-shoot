@@ -58,6 +58,9 @@ public:
     void setModel(QString model) {m_model = model;}
     ParticleEmitter * m_emitter;
 
+    Vector3 m_max; //defines bounding box
+    Vector3 m_min;
+
 protected:
     //Physics
     Vector3 m_pos;

@@ -13,8 +13,6 @@ Entity::Entity(Vector3 pos, Vector3 dir, Vector2 rotation, GLuint textureID){
     m_quadric = gluNewQuadric();
     m_tess = gluNewTess();
     m_colRadius = 0.50f;
-
-
 }
 
 
@@ -37,9 +35,16 @@ void Entity::onCollide(Entity *e){
         }
         else if(e->getCollisionType() == COLLISION_BOX && getCollisionType() == COLLISION_BOX){
 
+            Vector3 minone = e->getPos() + e->m_min;
+            Vector3 maxone = e->getPos() + e->m_max;
+            Vector3 mintwo = getPos() + m_min;
+            Vector3 maxtwo = getPos() + m_max;
+
+            if (!(minone.y > maxtwo.y || mintwo.y > maxone.y ||
+                  minone.x > maxtwo.x || mintwo.x > maxone.x ||
+                  minone.z > maxtwo.z || mintwo.z > maxone.z))
+                collisionLogic();
         }
-
-
     }
 
 
