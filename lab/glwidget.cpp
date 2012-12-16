@@ -150,12 +150,12 @@ void GLWidget::initializeResources()
 void GLWidget::loadCubeMap()
 {
     QList<QFile *> fileList;
-    fileList.append(new QFile("/course/cs123/bin/textures/astra/posx.jpg"));
-    fileList.append(new QFile("/course/cs123/bin/textures/astra/negx.jpg"));
-    fileList.append(new QFile("/course/cs123/bin/textures/astra/posy.jpg"));
-    fileList.append(new QFile("/course/cs123/bin/textures/astra/negy.jpg"));
-    fileList.append(new QFile("/course/cs123/bin/textures/astra/posz.jpg"));
-    fileList.append(new QFile("/course/cs123/bin/textures/astra/negz.jpg"));
+    fileList.append(new QFile(":/textures/nebula/purplez_right1.jpg"));
+    fileList.append(new QFile(":/textures/nebula/purplez_left2.jpg"));
+    fileList.append(new QFile(":/textures/nebula/purplez_top3.jpg"));
+    fileList.append(new QFile(":/textures/nebula/purplez_bottom4.jpg"));
+    fileList.append(new QFile(":/textures/nebula/purplez_front5.jpg"));
+    fileList.append(new QFile(":/textures/nebula/purplez_back6.jpg"));
     m_cubeMap = ResourceLoader::loadCubeMap(fileList);
 }
 
@@ -271,12 +271,36 @@ void GLWidget::paintGL()
                                                    QRect(0, 0, width, height), m_framebufferObjects["fbo_0"],
                                                    QRect(0, 0, width, height), GL_COLOR_BUFFER_BIT, GL_NEAREST);
 
+
+
+
     // TODO: Step 0 - draw the scene to the screen as a textured quad
 
     applyOrthogonalCamera(width, height);
     glBindTexture(GL_TEXTURE_2D, m_framebufferObjects["fbo_1"]->texture());
     renderTexturedQuad(width, height);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+//    glBindTexture(GL_TEXTURE_2D, m_framebufferObjects["fbo_1"]->texture());
+//    // Clamp value to edge of texture when texture index is out of bounds
+////    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+////    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+//    // Draw the  quad
+//    glBegin(GL_QUADS);
+//    glTexCoord2f(0.0f, 0.0f);
+//    glVertex3f(0.0f, 0.0f, 0.f);
+//    glTexCoord2f(1.0f, 0.0f);
+//    glVertex3f(width, 0.0f, 0.0f);
+//    glTexCoord2f(1.0f, 1.0f);
+//    glVertex3f(width, height, 0.f);
+//    glTexCoord2f(0.0f, 1.0f);
+//    glVertex3f(0.0f, height, 0.0f);
+//    glEnd();
+//    glBindTexture(GL_TEXTURE_2D, 0);
+
+
+
 
     paintText();
 }

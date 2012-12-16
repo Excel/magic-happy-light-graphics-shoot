@@ -19,9 +19,6 @@ void PBCurve::addPoint(Vector3 point){
         Vector3 midpoint = (point + point2)/2;
         m_points.push_back(midpoint);
         m_points.swap(m_points.size() - 1, m_points.size() - 2);
-
-        cout<<"smooth"<<"\n";
-
     }
 
     if(m_points.size() <= 4){

@@ -8,5 +8,11 @@
         <file>shaders/refract.frag</file>
         <file>shaders/refract.vert</file>
         <file>shaders/reflect.vert</file>
+        <file>textures/nebula/purplez_back6.jpg</file>
+        <file>textures/nebula/purplez_bottom4.jpg</file>
+        <file>textures/nebula/purplez_front5.jpg</file>
+        <file>textures/nebula/purplez_left2.jpg</file>
+        <file>textures/nebula/purplez_right1.jpg</file>
+        <file>textures/nebula/purplez_top3.jpg</file>
     </qresource>
 </RCC>
