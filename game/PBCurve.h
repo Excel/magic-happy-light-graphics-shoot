@@ -13,6 +13,10 @@ public:
 
     void addPoint(Vector3 point);
 
+    void completeCircuit();
+
+    void clear();
+
     QList<Vector3> getPoints() {return m_points;}
 
     Vector3 getPathPoint(float time);

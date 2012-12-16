@@ -8,14 +8,14 @@
 typedef Vector2 GridIndex;
 typedef Vector3 WorldPoint;
 
-class Lab5Canvas : public QGLWidget
+class canvas : public QGLWidget
 {
     Q_OBJECT
 
 public:
 
-    Lab5Canvas(QWidget *parent = 0);
-    virtual ~Lab5Canvas();
+    canvas(QWidget *parent = 0);
+    virtual ~canvas();
 
 protected:
 

@@ -13,14 +13,11 @@ World::World(){
     m_dt = 1E-3;
 
     m_path = new PBCurve();
-    m_path->addPoint(Vector3(0, 0, 0));
 
-    m_range = 20;
-    int curvesToAdd = 5;
-    for(int i = 1; i <= 3*curvesToAdd - 1; i++){
-        m_path->addPoint(Vector3(rand()%m_range - m_range/2, rand()%m_range - m_range/2, rand()%m_range - m_range/2));
-    }
-    m_path->addPoint(Vector3(0, 0, 0));
+    m_range = 25;
+    m_curvesToAdd = 60;
+
+    createPath();
 
 }
 
@@ -72,7 +69,43 @@ void World::onUpdate(){
 
 
     m_t += m_dt;
+
+    //determine whether or not to construct a new bezier path
+    int index = (int)(floor(m_t));
+    index = (index) % m_curvesToAdd;
+    float t = fmod(m_t, 1);
+
+    if(index == 0 && t < m_dt){
+        cout<<"okay"<<"\n";
+        m_t = 0;
+        createPath();
+    }
 }
+
+void World::createPath(){
+    if(m_path->getPoints().size() > 0){
+        Vector3 prevpoint = m_path->getPoints().at(m_path->getPoints().size() - 2);
+        m_path->clear();
+        m_path->addPoint(Vector3(0, 0, 0));
+        Vector3 endPoint = -1 * prevpoint;
+        m_path->addPoint(endPoint);
+    }
+    else{
+        m_path->clear();
+        m_path->addPoint(Vector3(0, 0, 0));
+    }
+
+
+    cout<<m_path->getPoints().size()<<"\n";
+
+
+    while(m_path->getPoints().size() <= 3 * m_curvesToAdd - 2){
+        m_path->addPoint(Vector3(rand()%m_range - m_range/2, rand()%m_range - m_range/2, rand()%m_range - m_range/2));
+    }
+
+    m_path->completeCircuit();
+}
+
 Vector3 World::getPathPoint()
 {
     return m_path->getPathPoint(m_t);

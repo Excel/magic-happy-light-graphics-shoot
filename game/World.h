@@ -26,6 +26,8 @@ public:
 
     void addEntity(Entity* e) {m_entities.push_back(e);}
 
+    void createPath();
+
     Vector3 getPathPoint();
 
 protected:
@@ -42,6 +44,7 @@ protected:
     QList<Entity* > m_entities; // bullets, targets, special targets, whatever man
 
     int m_range; //size of curve
+    int m_curvesToAdd; //how many bezier curves are stitched in the path
 };
 
 

@@ -25,7 +25,8 @@ HEADERS += lab/glwidget.h \
     support/common.h \
     game/Entity.h \
     game/Target.h \
-    game/PBCurve.h
+    game/PBCurve.h \
+    game/canvas.h
 
 SOURCES += \
     lab/glwidget.cpp \
@@ -40,7 +41,8 @@ SOURCES += \
     game/particleemitter.cpp \
     game/Entity.cpp \
     game/Target.cpp \
-    game/PBCurve.cpp
+    game/PBCurve.cpp \
+    game/canvas.cpp
 
 FORMS += mainwindow.ui \
     support/mainwindow.ui
