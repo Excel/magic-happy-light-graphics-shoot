@@ -26,17 +26,10 @@ void Target::onUpdate(){
     }
 }
 
-void Target::onCollide(Entity* e){
-    //check for collisions here
-    if(e->isEnemy() != isEnemy()){
-        //assume they are spheres at the mo
-        if((e->getPos() - m_pos).length() < e->getColRadius() + m_colRadius){
-            m_hit = true;
-            m_world->setScore(m_world->getScore()+1);
-        }
+void Target::collisionLogic(){
+    m_hit = true;
+    m_world->setScore(m_world->getScore()+1);
 
-
-    }
 
 }
 

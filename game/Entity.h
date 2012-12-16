@@ -26,8 +26,10 @@ public:
 
     /*! generally used for moving and existing */
     virtual void onUpdate() = 0;
-    /*! logic to determine if this entity collides with another entity, and what happens if it does */
-    virtual void onCollide(Entity* e) = 0;
+    /*! logic to determine if this entity collides with another entity */
+    void onCollide(Entity* e);
+    /*! logic to determine what happens in a collision */
+    virtual void collisionLogic() = 0;
     /*! how to draw the entity */
     virtual void onRender() = 0;
     /*! how to draw the collision shape of the entity */
@@ -47,7 +49,10 @@ public:
     /*! differentiate between bullets (false) and targets/specials (true) */
     bool isEnemy() {return m_enemy;}
 
+    CollisionType getCollisionType() {return m_colType;}
     float getColRadius() {return m_colRadius;}
+    Vector3 getColMin() {return m_colMin;}
+    Vector3 getColMax() {return m_colMax;}
     void setColRadius(float r) {m_colRadius = r;}
     QString getModel() {return m_model;}
     void setModel(QString model) {m_model = model;}
@@ -67,8 +72,10 @@ protected:
 
     //Collision
     GLUquadric *m_quadric;
+    GLUtesselator *m_tess;
     CollisionType m_colType;
     float m_colRadius;
+    Vector3 m_colMin, m_colMax;
     bool m_enemy;
 
 

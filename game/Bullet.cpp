@@ -8,12 +8,14 @@ Bullet::Bullet(Vector3 pos, Vector3 dir, Vector2 rotation, GLuint textureID) : E
     m_timestep = 1E-1;
     //m_timestep = 1E-5;
 
-    setColRadius(0.50f);
 
     m_colType = COLLISION_SPHERE;
     m_enemy = false;
 
     setModel("dragon");
+
+
+    setColRadius(0.50f);
     setShader("psycho");
 
 }
@@ -29,16 +31,8 @@ void Bullet::onUpdate(){
     m_emitter->updateParticles();       //Move the particles
 }
 
-void Bullet::onCollide(Entity* e){
-    //check for collisions here
-    if(e->isEnemy() != isEnemy()){
-        //assume they are spheres at the mo
-        if((e->getPos() - m_pos).length() < e->getColRadius() + m_colRadius){
-            m_existence = -1;
-        }
-
-
-    }
+void Bullet::collisionLogic(){
+    m_existence = -1;
 
 }
 
@@ -54,6 +48,22 @@ void Bullet::onRender(){
 
 void Bullet::onCollisionRender(){
     if(m_colType == COLLISION_SPHERE){
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glLineWidth(3.f);
+        glColor3f(1.0f, 0.5f, 0.5f);
+
+        glPushMatrix();
+        glTranslatef(m_pos.x, m_pos.y, m_pos.z);
+
+        gluSphere(m_quadric, getColRadius(), 10, 10);
+
+        glPopMatrix();
+
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        glLineWidth(1.f);
+        glColor3f(1.0f, 1.0f, 1.0f);
+    }
+    else if(m_colType == COLLISION_BOX){
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glLineWidth(3.f);
         glColor3f(1.0f, 0.5f, 0.5f);

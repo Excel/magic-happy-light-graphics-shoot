@@ -13,7 +13,7 @@ public:
     virtual ~Target();
 
     virtual void onUpdate();
-    virtual void onCollide(Entity *e);
+    virtual void collisionLogic();
     virtual void onRender();
     virtual void onCollisionRender();
 
