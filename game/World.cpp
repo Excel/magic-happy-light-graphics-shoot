@@ -76,7 +76,6 @@ void World::onUpdate(){
     float t = fmod(m_t, 1);
 
     if(index == 0 && t < m_dt){
-        cout<<"okay"<<"\n";
         m_t = 0;
         createPath();
     }
@@ -94,9 +93,6 @@ void World::createPath(){
         m_path->clear();
         m_path->addPoint(Vector3(0, 0, 0));
     }
-
-
-    cout<<m_path->getPoints().size()<<"\n";
 
 
     while(m_path->getPoints().size() <= 3 * m_curvesToAdd - 2){
