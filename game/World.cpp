@@ -9,6 +9,19 @@ World::World(){
     m_cooldown = 0;
     m_maxCooldown = 20;
 
+    m_t = 0;
+    m_dt = 1E-3;
+
+    m_path = new PBCurve();
+    m_path->addPoint(Vector3(0, 0, 0));
+
+    m_range = 20;
+    int curvesToAdd = 5;
+    for(int i = 1; i <= 3*curvesToAdd - 1; i++){
+        m_path->addPoint(Vector3(rand()%m_range - m_range/2, rand()%m_range - m_range/2, rand()%m_range - m_range/2));
+    }
+    m_path->addPoint(Vector3(0, 0, 0));
+
 }
 
 World::~World(){
@@ -17,6 +30,7 @@ World::~World(){
         delete m_entities.at(i);
     }
     m_entities.clear();
+    delete m_path;
 }
 
 void World::fireRay(Vector3 pos, Vector3 ray, const OrbitCamera &camera, GLuint textureID){
@@ -34,6 +48,7 @@ void World::fireRay(Vector3 pos, Vector3 ray, const OrbitCamera &camera, GLuint 
 
 void World::onUpdate(){
     m_cooldown--;
+
 
     for(int i = 0; i < m_entities.size(); i++){
         for(int j = 0; j < m_entities.size(); j++){
@@ -54,6 +69,13 @@ void World::onUpdate(){
             }
         }
     }
+
+
+    m_t += m_dt;
+}
+Vector3 World::getPathPoint()
+{
+    return m_path->getPathPoint(m_t);
 }
 
 

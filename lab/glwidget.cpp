@@ -278,9 +278,6 @@ void GLWidget::paintGL()
     renderTexturedQuad(width, height);
     glBindTexture(GL_TEXTURE_2D, 0);
 
-
-
-
     paintText();
 }
 
@@ -398,6 +395,8 @@ void GLWidget::renderScene()
     //update the entities' positions/collisions/whatnot
     if(m_firstPersonMode){
         m_world->onUpdate();
+
+        m_camera.center = m_world->getPathPoint();
 
         //shoot ray if mouse held down and if this is a good idea
         if(m_mousePressed && m_autofire){

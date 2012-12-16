@@ -5,6 +5,7 @@
 #include "game/Entity.h"
 #include "vector.h"
 #include "camera.h"
+#include "game/PBCurve.h"
 
 class World {
 public:
@@ -25,13 +26,22 @@ public:
 
     void addEntity(Entity* e) {m_entities.push_back(e);}
 
+    Vector3 getPathPoint();
+
 protected:
 
     //Resources
     int m_score;    // current score
     int m_cooldown; // cooldown of weapon
     int m_maxCooldown;  // max cooldown of weapon
+
+    float m_t;
+    float m_dt;
+
+    PBCurve* m_path;
     QList<Entity* > m_entities; // bullets, targets, special targets, whatever man
+
+    int m_range; //size of curve
 };
 
 

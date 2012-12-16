@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>[Lab09] Bloom</string>
+   <string>Dragon Shoot: The Dragoning (c)2012</string>
   </property>
   <widget class="GLWidget" name="centralWidget"/>
   <widget class="QMenuBar" name="menuBar">
