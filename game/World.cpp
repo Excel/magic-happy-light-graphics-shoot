@@ -12,6 +12,9 @@ World::World(){
     m_t = 0;
     m_dt = 1E-3;
 
+    m_targets = 0;
+    m_maxTargets = 10;
+
     m_path = new PBCurve();
 
     m_range = 25;
@@ -40,6 +43,13 @@ void World::fireRay(Vector3 pos, Vector3 ray, const OrbitCamera &camera, GLuint 
         m_entities.push_back(b);
     }
 
+}
+
+void World::addTarget(Entity *e){
+    if(m_targets < m_maxTargets){
+        m_entities.push_back(e);
+        m_targets++;
+    }
 }
 
 

@@ -30,6 +30,9 @@ public:
 
     Vector3 getPathPoint();
 
+    void addTarget(Entity* e);
+
+
 protected:
 
     //Resources
@@ -45,6 +48,9 @@ protected:
 
     int m_range; //size of curve
     int m_curvesToAdd; //how many bezier curves are stitched in the path
+
+    int m_targets;
+    int m_maxTargets;
 };
 
 

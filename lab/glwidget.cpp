@@ -166,11 +166,12 @@ void GLWidget::initializeGL()
 //    GLfloat ambientColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 //    GLfloat diffuseColor[] = { 1.0f, 1.0f, 1.0, 1.0f };
 //    GLfloat specularColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-//    GLfloat lightPosition[] = { 0.f, 0.f, 10.f, 1.0f };
+//    GLfloat lightPosition[] = { 0.f, 0.f, -10.f, 0.0f };
 //    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientColor);
 //    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseColor);
 //    glLightfv(GL_LIGHT0, GL_SPECULAR, specularColor);
 //    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+
 //    glEnable(GL_LIGHT0);
 
 
@@ -383,9 +384,10 @@ void GLWidget::renderScene()
       */
     if(m_firstPersonMode){
         if((time - m_spawnTime) >= 1000){
-            Target* t = new Target(Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 5), Vector2(0.f, 0.f), m_particle, m_dragon);
+
+            Target* t = new Target(m_camera.center + Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 10 - 5.0f), Vector2(0.f, 0.f), m_particle, m_dragon);
             t->setWorld(m_world);
-            m_world->addEntity(t);
+            m_world->addTarget(t);
             m_spawnTime = time;
         }
     }
