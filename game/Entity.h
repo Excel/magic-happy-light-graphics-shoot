@@ -2,8 +2,7 @@
 #define ENTITY_H
 
 #include "vector.h"
-#include "particleemitter.h"
-#include "glm.h"
+
 
 #include "resourceloader.h"
 
@@ -18,9 +17,8 @@ public:
       pos - position of entity
       ray - direction of entity
       rotation - rotation of entity
-      textureID - texture for particles
       */
-    Entity(Vector3 pos, Vector3 ray, Vector2 rotation, GLuint textureID);
+    Entity(Vector3 pos, Vector3 ray, Vector2 rotation);
 
     virtual ~Entity();
 
@@ -30,8 +28,6 @@ public:
     void onCollide(Entity* e);
     /*! logic to determine what happens in a collision */
     virtual void collisionLogic() = 0;
-    /*! how to draw the entity */
-    virtual void onRender() = 0;
     /*! how to draw the collision shape of the entity */
     virtual void onCollisionRender() = 0;
 
@@ -56,7 +52,6 @@ public:
     void setColRadius(float r) {m_colRadius = r;}
     QString getModel() {return m_model;}
     void setModel(QString model) {m_model = model;}
-    ParticleEmitter * m_emitter;
 
     Vector3 m_max; //defines bounding box
     Vector3 m_min;
@@ -76,7 +71,6 @@ protected:
 
     //Collision
     GLUquadric *m_quadric;
-    GLUtesselator *m_tess;
     CollisionType m_colType;
     float m_colRadius;
     Vector3 m_colMin, m_colMax;

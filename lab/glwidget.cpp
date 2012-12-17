@@ -179,10 +179,7 @@ void GLWidget::initializeGL()
 
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     m_terrain1 = loadTexture(":/textures/terrain/sand-texture.jpg");
-    m_terrain2 = loadTexture(":/textures/terrain/sand-texture.jpg");
     if (m_terrain1 == (unsigned int)(-1))
-        cout << "Texture chris1 does not exist" << endl;
-    if (m_terrain2 == (unsigned int)(-1))
         cout << "Texture does not exist" << endl;
 
 }
@@ -212,9 +209,6 @@ void GLWidget::initializeResources()
 
     createFramebufferObjects(width(), height());
     cout << "Loaded framebuffer objects..." << endl;
-
-    m_particle = loadTexture(":/textures/particles/particle2.bmp");
-    cout << "Loaded particle textures..." << endl;
 
     cout << " --- Finish Loading Resources ---" << endl;
 
@@ -390,7 +384,7 @@ void GLWidget::renderScene()
             int numTargets =  rand() %3 + 1;
             for(int i = 0; i < numTargets; i++){
                 bool frand = rand () % 2;
-                Target* t = new Target(m_camera.center + Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 10 - 5.0f), Vector2(0.f, 0.f), m_particle, frand ? m_models["friend"] : m_models["enemy"], frand);
+                Target* t = new Target(m_camera.center + Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 10 - 5.0f), Vector2(0.f, 0.f), frand ? m_models["friend"] : m_models["enemy"], frand);
                 t->setWorld(m_world);
                 m_world->addTarget(t);
                 m_spawnTime = time;
@@ -427,10 +421,6 @@ void GLWidget::renderScene()
         if(m_showCollision){
             e->onCollisionRender();
         }
-
-        //attempt to draw the particle emitters
-       e->onRender();
-
     }
 
     // Disable culling, depth testing and cube maps
@@ -456,23 +446,10 @@ void GLWidget::renderScene()
 
 
 void GLWidget::renderTerrain(){
-    glBindTexture(GL_TEXTURE_2D, m_terrain2);
+    glBindTexture(GL_TEXTURE_2D, m_terrain1);
     // Clamp value to edge of texture when texture index is out of bounds
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    // Draw the  quad
-//    glBegin(GL_QUADS);
-//    glTexCoord2f(0.0f, 0.0f);
-//    glVertex3f(-1*100*1.0f, -90.0f, -1*100*1.0f);
-//    glTexCoord2f(1.0f, 0.0f);
-//    glVertex3f(100*1.0f, -90.0f, -1*100*1.0f);
-//    glTexCoord2f(1.0f, 1.0f);
-//    glVertex3f(100*1.0f, -90.0f, 100*1.0f);
-//    glTexCoord2f(0.0f, 1.0f);
-//    glVertex3f(-1*100*1.0f, -90.0f, 100*1.0f);
-//    glEnd();
-
 
     // Push a new matrix onto the stack for modelling transformations
     glPushMatrix();
@@ -505,15 +482,10 @@ void GLWidget::renderTerrain(){
             glNormal3fv(curNorm.xyz);
             glTexCoord2f(1.f * (row+1)/m_gridLength, 1.f *column/m_gridLength);
             glVertex3fv(curVert.xyz);
-            //cout<<curVert<<" "<<curVert1<<" "<<row <<" "<<column<< "\n";
         }
         glEnd();
     }
 
-
-
-    //draw normals
-    //drawNormals();
     // Discard the modelling transformations (leaving only camera settings)
     glPopMatrix();
     // Force OpenGL to perform all pending operations -- usually a good idea to call this
@@ -636,43 +608,6 @@ void GLWidget::renderTexturedQuad(int width, int height) {
 }
 
 /**
-  Creates a gaussian blur kernel with the specified radius.  The kernel values
-  and offsets are stored.
-
-  @param radius: The radius of the kernel to create.
-  @param width: The width of the image.
-  @param height: The height of the image.
-  @param kernel: The array to write the kernel values to.
-  @param offsets: The array to write the offset values to.
-**/
-void GLWidget::createBlurKernel(int radius, int width, int height,
-                                                    GLfloat* kernel, GLfloat* offsets)
-{
-    int size = radius * 2 + 1;
-    float sigma = radius / 3.0f;
-    float twoSigmaSigma = 2.0f * sigma * sigma;
-    float rootSigma = sqrt(twoSigmaSigma * M_PI);
-    float total = 0.0f;
-    float xOff = 1.0f / width, yOff = 1.0f / height;
-    int offsetIndex = 0;
-    for (int y = -radius, idx = 0; y <= radius; ++y)
-    {
-        for (int x = -radius; x <= radius; ++x,++idx)
-        {
-            float d = x * x + y * y;
-            kernel[idx] = exp(-d / twoSigmaSigma) / rootSigma;
-            total += kernel[idx];
-            offsets[offsetIndex++] = x * xOff;
-            offsets[offsetIndex++] = y * yOff;
-        }
-    }
-    for (int i = 0; i < size * size; ++i)
-    {
-        kernel[i] /= total;
-    }
-}
-
-/**
   Handles any key press from the keyboard
  **/
 void GLWidget::keyPressEvent(QKeyEvent *event)
@@ -737,7 +672,7 @@ void GLWidget::shootRay(){
     Vector3 ray = getMouseRay();
 
     m_mousePressed = true;
-    m_world->fireRay(m_camera.center, ray, m_camera, m_particle, m_dragon);
+    m_world->fireRay(m_camera.center, ray, m_camera, m_dragon);
 }
 
 /**
@@ -766,88 +701,6 @@ GLuint GLWidget::loadTexture(const QString &path)
 
 
     return id;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-void GLWidget::applyShaders(){
-    int width = this->width();
-    int height = this->height();
-    // TODO: Step 1 - use the brightpass shader to render bright areas
-    // only to fbo_2
-    m_framebufferObjects["fbo_2"]->bind();
-    m_shaderPrograms["brightpass"]->bind();
-    glBindTexture(GL_TEXTURE_2D, m_framebufferObjects["fbo_1"]->texture());
-    //draw
-
-    renderTexturedQuad(width, height);
-    m_shaderPrograms["brightpass"]->release();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    m_framebufferObjects["fbo_2"]->release();
-
-    // TODO: Uncomment this section in step 2 of the lab
-     float scales[] = {4.f,8.f};
-    for (int i = 0; i < 2; ++i)
-    {
-        // Render the blurred brightpass filter result to fbo 1
-       renderBlur(width / scales[i], height / scales[i]);
-
-       // Bind the image from fbo to a texture
-        glBindTexture(GL_TEXTURE_2D, m_framebufferObjects["fbo_1"]->texture());
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-        // Enable alpha blending and render the texture to the screen
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE, GL_ONE);
-        renderTexturedQuad(width * scales[i], height * scales[i]);
-        glDisable(GL_BLEND);
-        glBindTexture(GL_TEXTURE_2D, 0);
-    }
-}
-
-
-/**
-  Run a gaussian blur on the texture stored in fbo 2 and
-  put the result in fbo 1.  The blur should have a radius of 2.
-
-  @param width: the viewport width
-  @param height: the viewport height
-**/
-void GLWidget::renderBlur(int width, int height)
-{
-    int radius = 2;
-    int dim = radius * 2 + 1;
-    GLfloat kernel[dim * dim];
-    GLfloat offsets[dim * dim * 2];
-    createBlurKernel(radius, width, height, &kernel[0], &offsets[0]);
-
-    // TODO: Step 2 - Finish filling this in
-    m_framebufferObjects["fbo_1"]->bind();
-    m_shaderPrograms["blur"]->bind();
-    glBindTexture(GL_TEXTURE_2D, m_framebufferObjects["fbo_2"]->texture());
-    //draw
-
-
-    m_shaderPrograms["blur"]->setUniformValue("arraySize", dim*dim);
-    m_shaderPrograms["blur"]->setUniformValueArray("offsets", offsets, dim*dim*2, 2);
-    m_shaderPrograms["blur"]->setUniformValueArray("kernel", kernel, dim*dim, 1);
-
-    renderTexturedQuad(width, height);
-    m_shaderPrograms["blur"]->release();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    m_framebufferObjects["fbo_1"]->release();
-
 }
 
 /** Terrain stuffs */
@@ -1088,37 +941,3 @@ QList<WorldPoint*> GLWidget::getSurroundingVertices(const GridIndex &coordinate)
 
     return vecs;
 }
-
-/**
- * Draws a line at each vertex showing the direction of that vertex's normal. You may find
- * this to be a useful tool if you're having trouble getting the lighting to look right.
- * By default, this function is called in paintGL(), but only renders anything if
- * m_renderNormals is true. You do not need to modify this function.
- */
-void GLWidget::drawNormals()
-{
-    if (m_renderNormals)
-    {
-        glColor3f(1,0,0);
-
-        for (int row = 0; row < m_gridLength; row++)
-        {
-            for (int column = 0; column < m_gridLength; column++)
-            {
-                glBegin(GL_LINES);
-
-                WorldPoint curVert = m_terrainMap[getIndex(row, column)];
-                Vector3 curNorm = m_normalMap[getIndex(row, column)];
-
-                glNormal3fv(curNorm.xyz);
-                glVertex3f(curVert.x, curVert.y, curVert.z);
-                glVertex3f(curVert.x +curNorm.x,
-                           curVert.y + curNorm.y,
-                           curVert.z + curNorm.z);
-
-                glEnd();
-            }
-        }
-    }
-}
-

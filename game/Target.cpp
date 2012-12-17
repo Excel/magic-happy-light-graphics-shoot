@@ -1,7 +1,7 @@
 #include "Target.h"
 
 
-Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetModel, bool friendly) : Entity(pos, Vector3(0,0,0), rotation, textureID){
+Target::Target(Vector3 pos, Vector2 rotation, Model targetModel, bool friendly) : Entity(pos, Vector3(0,0,0), rotation){
     m_existence = 1;
     m_hit = false;
     setColRadius(0.50f);
@@ -86,16 +86,6 @@ void Target::collisionLogic(){
 
 }
 
-void Target::onRender(){
-    if(m_hit){
-        m_emitter->drawParticles();         //Draw the particles
-    }
-    glAccum(GL_MULT, 0.9);
-    glAccum(GL_ACCUM, 0.1);
-    glAccum(GL_RETURN, 1);
-    glFlush();
-
-}
 
 void Target::onCollisionRender(){
     if(m_colType == COLLISION_SPHERE){

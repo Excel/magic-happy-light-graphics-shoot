@@ -2,7 +2,7 @@
 
 using std::cout;
 
-Bullet::Bullet(Vector3 pos, Vector3 dir, Vector2 rotation, GLuint textureID, Model bulletModel) : Entity(pos, dir, rotation, textureID){
+Bullet::Bullet(Vector3 pos, Vector3 dir, Vector2 rotation, Model bulletModel) : Entity(pos, dir, rotation){
 
     m_existence = 250;
     m_timestep = 2E-1;
@@ -56,7 +56,6 @@ Bullet::~Bullet(){
 void Bullet::onUpdate(){
     m_pos += m_dir * m_timestep;
     m_existence--;
-    m_emitter->updateParticles();       //Move the particles
 }
 
 void Bullet::collisionLogic(){
@@ -64,15 +63,6 @@ void Bullet::collisionLogic(){
 
 }
 
-void Bullet::onRender(){
-    m_emitter->drawParticles();         //Draw the particles
-
-    glAccum(GL_MULT, 0.9);
-    glAccum(GL_ACCUM, 0.1);
-    glAccum(GL_RETURN, 1);
-    glFlush();
-
-}
 
 void Bullet::onCollisionRender(){
     if(m_colType == COLLISION_SPHERE){

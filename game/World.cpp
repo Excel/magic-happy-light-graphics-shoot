@@ -33,13 +33,13 @@ World::~World(){
     delete m_path;
 }
 
-void World::fireRay(Vector3 pos, Vector3 ray, const OrbitCamera &camera, GLuint textureID, Model bulletModel){
+void World::fireRay(Vector3 pos, Vector3 ray, const OrbitCamera &camera, Model bulletModel){
 
     if(m_cooldown <= 0){
         m_cooldown = m_maxCooldown;
 
         Vector2 rotation (-camera.theta * 180/M_PI + 180, -camera.phi * 180/M_PI);
-        Bullet* b = new Bullet(pos, ray, rotation, textureID, bulletModel);
+        Bullet* b = new Bullet(pos, ray, rotation, bulletModel);
         m_entities.push_back(b);
     }
 

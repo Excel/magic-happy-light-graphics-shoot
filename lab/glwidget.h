@@ -122,13 +122,6 @@ protected:
      * to begin the terrain generation process. You do not need to modify this function.
      */
     void populateTerrain();
-    /**
-     * Draws a line at each vertex showing the direction of that vertex's normal. You may find
-     * this to be a useful tool if you're having trouble getting the lighting to look right.
-     * By default, this function is called in paintGL(), but only renders anything if
-     * m_renderNormals is true. You do not need to modify this function.
-     */
-    void drawNormals();
 
     //Member variables
 
@@ -146,11 +139,6 @@ protected:
     GLint m_decay;
     /** Whether or not drawNormals() should do anything when called. */
     bool m_renderNormals;
-
-
-
-
-
 
 
 private:
@@ -179,9 +167,7 @@ private:
     Model m_enemy;
     GLuint m_skybox; // skybox call list ID
     GLuint m_terrain1; //texture ID
-    GLuint m_terrain2; //texture ID
     GLuint m_cubeMap; // cubeMap texture ID
-    GLuint m_particle; //particle texture ID
     QFont m_font; // font for rendering text
 };
 
