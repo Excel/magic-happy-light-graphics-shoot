@@ -13,7 +13,7 @@ World::World(){
     m_dt = 1.75E-3;
 
     m_targets = 0;
-    m_maxTargets = 10;
+    m_maxTargets = 20;
 
     m_path = new PBCurve();
 

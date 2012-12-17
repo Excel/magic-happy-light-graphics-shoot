@@ -241,9 +241,9 @@ void GLWidget::loadCubeMap()
 
 void GLWidget::createModels()
 {
-    m_dragon = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/xyzrgb_dragon.obj");
-    m_friend = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/Gargoyle_1.obj");
-    m_enemy = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/KinjaDragern.obj");
+    m_dragon = ResourceLoader::loadObjModel("/home/jqtran/course/cs123_final/models/xyzrgb_dragon.obj");
+    m_friend = ResourceLoader::loadObjModel("/home/jqtran/course/cs123_final/models/Gargoyle_1.obj");
+    m_enemy = ResourceLoader::loadObjModel("/home/jqtran/course/cs123_final/models/KinjaDragern.obj");
 
     m_models["dragon"] = m_dragon;
     m_models["friend"] = m_friend;
@@ -387,11 +387,16 @@ void GLWidget::renderScene()
       */
     if(m_firstPersonMode){
         if((time - m_spawnTime) >= 1000){
+            int numTargets =  rand() %3 + 1;
+            for(int i = 0; i < numTargets; i++){
+                bool frand = rand () % 2;
+                cout<<frand<<"\n";
+                Target* t = new Target(m_camera.center + Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 10 - 5.0f), Vector2(0.f, 0.f), m_particle, frand ? m_friend : m_enemy, frand);
+                t->setWorld(m_world);
+                m_world->addTarget(t);
+                m_spawnTime = time;
+            }
 
-            Target* t = new Target(m_camera.center + Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 10 - 5.0f), Vector2(0.f, 0.f), m_particle, m_dragon, false);
-            t->setWorld(m_world);
-            m_world->addTarget(t);
-            m_spawnTime = time;
         }
     }
 

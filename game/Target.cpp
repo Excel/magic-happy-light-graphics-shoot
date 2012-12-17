@@ -12,12 +12,12 @@ Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetMode
 
     if(!friendly)
     {
-        setModel("dragon");
+        setModel("enemy");
         setShader("refract");
     }
     else
     {
-        setModel("gargoyle");
+        setModel("friend");
         setShader("reflect");
     }
     m_model = targetModel;
@@ -51,13 +51,13 @@ Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetMode
         }
     }
 
-    m_range = 25;
+    m_range = 50;
     m_path = new PBCurve();
     m_curvesToAdd = 3;
     createPath();
 
     m_t = 0;
-    m_dt = 1E-3;
+    m_dt = 1.5E-3;
 }
 
 Target::~Target(){
