@@ -148,11 +148,6 @@ protected:
     bool m_renderNormals;
 
 
-
-
-
-
-
 private:
     QTimer m_timer;
     QTime m_clock;

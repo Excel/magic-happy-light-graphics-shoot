@@ -181,7 +181,7 @@ void GLWidget::initializeGL()
     m_terrain1 = loadTexture(":/textures/terrain/sand-texture.jpg");
     m_terrain2 = loadTexture(":/textures/terrain/sand-texture.jpg");
     if (m_terrain1 == (unsigned int)(-1))
-        cout << "Texture chris1 does not exist" << endl;
+        cout << "Texture does not exist" << endl;
     if (m_terrain2 == (unsigned int)(-1))
         cout << "Texture does not exist" << endl;
 
@@ -390,7 +390,7 @@ void GLWidget::renderScene()
         if((time - m_spawnTime) >= 1000){
             int numTargets =  rand() %3 + 1;
             for(int i = 0; i < numTargets; i++){
-                bool frand = rand () % 2;
+                bool frand = !(rand () % 4);
 
                 Target* t = new Target(m_camera.center + Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 10 - 5.0f), Vector2(0.f, 0.f), m_particle, frand ? m_models["friend"] : m_models["enemy"], frand);
                t->setWorld(m_world);
@@ -1019,10 +1019,10 @@ double GLWidget::getPerturb(int cur_depth)
  */
 void GLWidget::populateTerrain()
 {
-    WorldPoint tl(-150, -70, -150);
-    WorldPoint tr(150, -70, -150);
-    WorldPoint bl(-150, -70, 150);
-    WorldPoint br(150, -70, 150);
+    WorldPoint tl(-150, -80, -150);
+    WorldPoint tr(150, -80, -150);
+    WorldPoint bl(-150, -80, 150);
+    WorldPoint br(150, -80, 150);
     GridIndex tlg(0,0);
     GridIndex trg(0,m_gridLength-1);
     GridIndex blg(m_gridLength-1, 0);
