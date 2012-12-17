@@ -6,11 +6,13 @@ TEMPLATE = app
 INCLUDEPATH += lab \
     lib \
     math \
-    support
+    support \
+    models
 DEPENDPATH += lab \
     lib \
     math \
-    support
+    support\
+    models
 
 HEADERS += lab/glwidget.h \
     lib/targa.h \

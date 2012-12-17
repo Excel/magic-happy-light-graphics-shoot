@@ -240,11 +240,18 @@ void GLWidget::loadCubeMap()
 
 void GLWidget::createModels()
 {
-    m_dragon = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/PersianCarpet.obj");
+    QFile file("/models/xyzrgb_dragon.obj");
+    cout<<file.fileName().toStdString()<<"\n";
+    if(file.exists("/models/xyzrgb_dragon.obj")){
+    }
+    cout<<file.isReadable()<<"\n";
+
+
+
+    m_dragon = ResourceLoader::loadObjModel("/home/jqtran/course/cs123_final/models/xyzrgb_dragon.obj");
     m_sphere = ResourceLoader::loadObjModel("/course/cs123/data/mesh/sphere.obj");
     m_models["dragon"] = m_dragon;
     m_models["sphere"] = m_sphere;
-
 }
 
 /**
