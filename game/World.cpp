@@ -10,14 +10,14 @@ World::World(){
     m_maxCooldown = 20;
 
     m_t = 0;
-    m_dt = 1E-3;
+    m_dt = 1.75E-3;
 
     m_targets = 0;
     m_maxTargets = 10;
 
     m_path = new PBCurve();
 
-    m_range = 25;
+    m_range = 110;
     m_curvesToAdd = 60;
 
     createPath();
