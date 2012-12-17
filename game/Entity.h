@@ -61,6 +61,7 @@ public:
     Vector3 m_max; //defines bounding box
     Vector3 m_min;
 
+
 protected:
     //Physics
     Vector3 m_pos;
@@ -80,6 +81,7 @@ protected:
     float m_colRadius;
     Vector3 m_colMin, m_colMax;
     bool m_enemy;
+
 
 
 };

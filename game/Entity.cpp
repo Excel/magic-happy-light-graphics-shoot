@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "PBCurve.h"
 
 
 Entity::Entity(Vector3 pos, Vector3 dir, Vector2 rotation, GLuint textureID){
@@ -22,7 +23,6 @@ Entity::~Entity(){
     gluDeleteTess(m_tess);
 
 }
-
 
 void Entity::onCollide(Entity *e){
     //check for collisions here

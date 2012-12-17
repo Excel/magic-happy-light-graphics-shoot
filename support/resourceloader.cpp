@@ -5,7 +5,6 @@
 #include <QString>
 #include "glm.h"
 
-
 /**
   Loads the cube map into video memory.
 

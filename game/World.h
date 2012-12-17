@@ -32,6 +32,9 @@ public:
 
     void addTarget(Entity* e);
 
+    int getNumTargets() {return m_targets;}
+    void setNumTargets(int t) {m_targets = t;}
+
 
 protected:
 

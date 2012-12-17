@@ -21,7 +21,8 @@ public:
 
     bool isDone();
 
-    Model m_model;
+    void createPath();
+    Vector3 getPathPoint();
 
 protected:
     World* m_world;
@@ -29,6 +30,16 @@ protected:
 
     /*! did this thing get hit by a bullet */
     bool m_hit;
+
+
+    Model m_model;
+
+    PBCurve *m_path;
+    int m_curvesToAdd;
+
+    int m_range;
+    float m_t;
+    float m_dt;
 };
 
 #endif // TARGET_H

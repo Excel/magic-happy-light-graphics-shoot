@@ -40,10 +40,19 @@ Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetMode
                 m_max.z = m_model.model->vertices[i];
         }
     }
+
+    m_range = 25;
+    m_path = new PBCurve();
+    m_curvesToAdd = 3;
+    createPath();
+
+    m_t = 0;
+    m_dt = 1E-3;
 }
 
 Target::~Target(){
 
+    delete m_path;
 }
 
 
@@ -53,6 +62,9 @@ void Target::onUpdate(){
         m_existence--;
 
     }
+
+    m_t += m_dt;
+    m_pos = getPathPoint();
 }
 
 void Target::collisionLogic(){
@@ -133,9 +145,39 @@ void Target::onCollisionRender(){
 
 bool Target::isDone(){
     if(m_existence <= 0 && m_hit){
+        m_world->setNumTargets(m_world->getNumTargets() - 1);
         return true;
     }
 
     return false;
 }
+
+
+void Target::createPath(){
+    if(m_path->getPoints().size() > 0){
+        Vector3 prevpoint = m_path->getPoints().at(m_path->getPoints().size() - 2);
+        m_path->clear();
+        m_path->addPoint(m_pos);
+        Vector3 endPoint = -1 * prevpoint;
+        m_path->addPoint(endPoint);
+    }
+    else{
+        m_path->clear();
+        m_path->addPoint(m_pos);
+    }
+
+
+    while(m_path->getPoints().size() <= 3 * m_curvesToAdd - 2){
+        m_path->addPoint(m_pos + Vector3(rand()%m_range - m_range/2, rand()%m_range - m_range/2, rand()%m_range - m_range/2));
+    }
+
+    m_path->completeCircuit();
+}
+
+Vector3 Target::getPathPoint()
+{
+    return m_path->getPathPoint(m_t);
+}
+
+
 
