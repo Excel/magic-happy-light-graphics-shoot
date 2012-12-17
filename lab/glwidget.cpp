@@ -165,7 +165,7 @@ void GLWidget::initializeGL()
     // Set up a single light
     glEnable(GL_LIGHTING);
     glShadeModel(GL_SMOOTH);
-    GLfloat ambientColor[] = { 0.55f, 0.3f, 0.55f, 1.0f };
+    GLfloat ambientColor[] = { 0.95f, 0.7f, 0.95f, 1.0f };
     GLfloat diffuseColor[] = { 1.0f, 1.0f, 1.0, 1.0f };
     GLfloat specularColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
     GLfloat lightPosition[] = { 0.f, 0.f, 10.f, 0.0f };
