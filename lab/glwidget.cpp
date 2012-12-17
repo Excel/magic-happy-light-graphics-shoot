@@ -235,9 +235,10 @@ void GLWidget::loadCubeMap()
 
 void GLWidget::createModels()
 {
-    m_friend = ResourceLoader::loadObjModel("/home/jqtran/course/cs123_final/models/Gargoyle_1.obj");
-    m_enemy = ResourceLoader::loadObjModel("/home/jqtran/course/cs123_final/models/KinjaDragern.obj");
-    m_dragon = ResourceLoader::loadObjModel("/home/jqtran/course/cs123_final/models/xyzrgb_dragon.obj");
+    m_friend = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/Gargoyle_1.obj");
+    m_enemy = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/KinjaDragern.obj");
+    m_dragon = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/xyzrgb_dragon.obj");
+
 
     m_models["dragon"] = m_dragon;
     m_models["friend"] = m_friend;
@@ -383,7 +384,8 @@ void GLWidget::renderScene()
         if((time - m_spawnTime) >= 1000){
             int numTargets =  rand() %3 + 1;
             for(int i = 0; i < numTargets; i++){
-                bool frand = rand () % 2;
+                bool frand = !(rand () % 4);
+
                 Target* t = new Target(m_camera.center + Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 10 - 5.0f), Vector2(0.f, 0.f), frand ? m_models["friend"] : m_models["enemy"], frand);
                 t->setWorld(m_world);
                 m_world->addTarget(t);
@@ -870,10 +872,10 @@ double GLWidget::getPerturb(int cur_depth)
  */
 void GLWidget::populateTerrain()
 {
-    WorldPoint tl(-150, -70, -150);
-    WorldPoint tr(150, -70, -150);
-    WorldPoint bl(-150, -70, 150);
-    WorldPoint br(150, -70, 150);
+    WorldPoint tl(-150, -80, -150);
+    WorldPoint tr(150, -80, -150);
+    WorldPoint bl(-150, -80, 150);
+    WorldPoint br(150, -80, 150);
     GridIndex tlg(0,0);
     GridIndex trg(0,m_gridLength-1);
     GridIndex blg(m_gridLength-1, 0);

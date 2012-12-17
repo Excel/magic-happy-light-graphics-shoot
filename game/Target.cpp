@@ -2,7 +2,7 @@
 
 
 Target::Target(Vector3 pos, Vector2 rotation, Model targetModel, bool friendly) : Entity(pos, Vector3(0,0,0), rotation){
-    m_existence = 1;
+    m_existence = 700;
     m_hit = false;
     setColRadius(0.50f);
 
@@ -56,7 +56,7 @@ Target::Target(Vector3 pos, Vector2 rotation, Model targetModel, bool friendly) 
     createPath();
 
     m_t = 0;
-    m_dt = 1.5E-3;
+    m_dt = .75E-3;
 }
 
 Target::~Target(){
@@ -66,11 +66,8 @@ Target::~Target(){
 
 
 void Target::onUpdate(){
-    if(m_hit){
-        //m_emitter->updateParticles();       //Move the particles
-        m_existence--;
+    m_existence--;
 
-    }
 
     m_t += m_dt;
     m_pos = getPathPoint();
@@ -146,7 +143,7 @@ void Target::onCollisionRender(){
 }
 
 bool Target::isDone(){
-    if(m_existence <= 0 && m_hit){
+    if(m_existence <= 0 || m_hit){
         m_world->setNumTargets(m_world->getNumTargets() - 1);
         return true;
     }

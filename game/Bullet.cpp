@@ -5,8 +5,7 @@ using std::cout;
 Bullet::Bullet(Vector3 pos, Vector3 dir, Vector2 rotation, Model bulletModel) : Entity(pos, dir, rotation){
 
     m_existence = 250;
-    m_timestep = 2E-1;
-    //m_timestep = 1E-5;
+    m_timestep = 10E-1;
 
 
     m_colType = COLLISION_BOX;
