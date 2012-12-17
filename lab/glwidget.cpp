@@ -240,7 +240,7 @@ void GLWidget::loadCubeMap()
 
 void GLWidget::createModels()
 {
-    m_dragon = ResourceLoader::loadObjModel("/course/cs123/bin/models/xyzrgb_dragon.obj");
+    m_dragon = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/PersianCarpet.obj");
     m_sphere = ResourceLoader::loadObjModel("/course/cs123/data/mesh/sphere.obj");
 
     m_models["dragon"] = m_dragon;

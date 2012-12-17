@@ -15,5 +15,18 @@
         <file>textures/nebula/purplez_right1.jpg</file>
         <file>textures/nebula/purplez_top3.jpg</file>
         <file>textures/terrain/sand-texture.jpg</file>
+        <file>models/broccoli.mtl</file>
+        <file>models/broccoli.obj</file>
+        <file>models/dragon.mtl</file>
+        <file>models/Dragon.obj</file>
+        <file>models/Dragon2.obj</file>
+        <file>models/Gargoyle_1.mtl</file>
+        <file>models/Gargoyle_1.obj</file>
+        <file>models/KinjaDragern.mtl</file>
+        <file>models/KinjaDragern.obj</file>
+        <file>models/Mushroom.obj</file>
+        <file>models/PersianCarpet.mtl</file>
+        <file>models/PersianCarpet.obj</file>
+        <file>models/xyzrgb_dragon.obj</file>
     </qresource>
 </RCC>
