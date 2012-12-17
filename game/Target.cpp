@@ -1,17 +1,27 @@
 #include "Target.h"
 
 
-Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetModel) : Entity(pos, Vector3(0,0,0), rotation, textureID){
+Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetModel, bool friendly) : Entity(pos, Vector3(0,0,0), rotation, textureID){
     m_existence = 1;
     m_hit = false;
     setColRadius(0.50f);
 
     m_colType = COLLISION_BOX;
     m_enemy = true;
+    m_friendly = friendly;
 
-    setModel("dragon");
+    if(!friendly)
+    {
+        setModel("dragon");
+        setShader("refract");
+    }
+    else
+    {
+        setModel("gargoyle");
+        setShader("reflect");
+    }
     m_model = targetModel;
-    setShader("refract");
+
 
     for(int i = 0; i < 3*m_model.model->numvertices; i++)
     {
@@ -69,7 +79,10 @@ void Target::onUpdate(){
 
 void Target::collisionLogic(){
     m_hit = true;
+    if(!m_friendly)
     m_world->setScore(m_world->getScore()+1);
+    else
+    m_world->setScore(m_world->getScore()-5);
 
 
 }

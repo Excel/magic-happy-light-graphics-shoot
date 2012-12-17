@@ -1,5 +1,6 @@
 uniform samplerCube CubeMap;
 varying vec3 normal, lightDir, r;
+uniform float modr;
 
 void main (void)
 {
@@ -13,5 +14,6 @@ void main (void)
 		final_color += textureCube( CubeMap, r);
 	}
 	gl_FragColor = final_color;
+	gl_FragColor.x += .5;
 	
 }

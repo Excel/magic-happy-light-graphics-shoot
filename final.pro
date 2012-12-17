@@ -58,8 +58,7 @@ OTHER_FILES += \
     shaders/blur.frag \
     shaders/psycho.frag \
     shaders/psycho.vert \
-    shaders/psycho.vars \
-    models/xyzrgb_dragon.obj
+    shaders/psycho.vars
 
 RESOURCES += \
     resources.qrc

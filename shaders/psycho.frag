@@ -32,7 +32,7 @@ void main()
 
 
 	
-    gl_FragColor = .6*textureCube(envMap, look.xyz) + .4*color;
+    gl_FragColor = .6*textureCube(envMap, look.xyz) + .8*color;
     
     
 }
