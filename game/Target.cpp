@@ -22,7 +22,6 @@ Target::Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetMode
     }
     m_model = targetModel;
 
-
     for(int i = 0; i < 3*m_model.model->numvertices; i++)
     {
 
