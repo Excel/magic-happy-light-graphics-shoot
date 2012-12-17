@@ -13,4 +13,5 @@ void main (void)
 		final_color += textureCube( CubeMap, r);
 	}
 	gl_FragColor = final_color;
+	gl_FragColor.y += .6;
 }

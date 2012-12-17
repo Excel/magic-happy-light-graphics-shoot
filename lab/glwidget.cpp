@@ -103,7 +103,8 @@ GLWidget::~GLWidget()
     glDeleteLists(m_skybox, 1);
     const_cast<QGLContext *>(context())->deleteTexture(m_cubeMap);
     glmDelete(m_dragon.model);
-    glmDelete(m_sphere.model);
+    glmDelete(m_friend.model);
+    glmDelete(m_enemy.model);
 
     delete m_world;
 
@@ -240,11 +241,13 @@ void GLWidget::loadCubeMap()
 
 void GLWidget::createModels()
 {
-    m_dragon = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/PersianCarpet.obj");
-    m_sphere = ResourceLoader::loadObjModel("/course/cs123/data/mesh/sphere.obj");
+    m_dragon = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/xyzrgb_dragon.obj");
+    m_friend = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/Gargoyle_1.obj");
+    m_enemy = ResourceLoader::loadObjModel("/home/cmpiette/course/cs123/Final/models/KinjaDragern.obj");
 
     m_models["dragon"] = m_dragon;
-    m_models["sphere"] = m_sphere;
+    m_models["friend"] = m_friend;
+    m_models["enemy"] = m_enemy;
 
 }
 
@@ -386,7 +389,7 @@ void GLWidget::renderScene()
     if(m_firstPersonMode){
         if((time - m_spawnTime) >= 1000){
 
-            Target* t = new Target(m_camera.center + Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 10 - 5.0f), Vector2(0.f, 0.f), m_particle, m_dragon);
+            Target* t = new Target(m_camera.center + Vector3(rand() % 10 - 5.0f, rand() % 10 - 5.0f, rand() % 10 - 5.0f), Vector2(0.f, 0.f), m_particle, m_dragon, false);
             t->setWorld(m_world);
             m_world->addTarget(t);
             m_spawnTime = time;

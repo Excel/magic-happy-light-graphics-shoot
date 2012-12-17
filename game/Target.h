@@ -8,7 +8,7 @@
 class Target : public Entity {
 public:
 
-    Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetModel);
+    Target(Vector3 pos, Vector2 rotation, GLuint textureID, Model targetModel, bool friendly);
 
     virtual ~Target();
 
@@ -26,6 +26,7 @@ public:
 protected:
     World* m_world;
     int m_existence;
+    bool m_friendly;
 
     /*! did this thing get hit by a bullet */
     bool m_hit;
