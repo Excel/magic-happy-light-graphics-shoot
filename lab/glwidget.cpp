@@ -62,7 +62,7 @@ GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent),
     m_renderNormals = false;
 
     // Determines how much each vertex gets perturbed. The larger the value, the less pertubration will occur per recursive value
-    m_decay = 2;
+    m_decay = 3;
 
     // The number of levels of recursion your terrain uses (can be considered the level of detail of your terrain)
     m_depth = 8;
@@ -71,7 +71,7 @@ GLWidget::GLWidget(QWidget *parent) : QGLWidget(parent),
     m_roughness = 6;
 
     // Seed a random number, your terrain will change based on what number you seed
-    srand(0);
+    srand(3);
 
     // Imagining your terrain as a square grid of points, gridLength is the number of elements on one side, or the length of a side of the grid
     m_gridLength = (1 << m_depth)+1;
@@ -161,23 +161,24 @@ void GLWidget::initializeGL()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
-//    // Set up a single light
-//    glEnable(GL_LIGHTING);
-//    GLfloat ambientColor[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-//    GLfloat diffuseColor[] = { 1.0f, 1.0f, 1.0, 1.0f };
-//    GLfloat specularColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
-//    GLfloat lightPosition[] = { 0.f, 0.f, -10.f, 0.0f };
-//    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientColor);
-//    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseColor);
-//    glLightfv(GL_LIGHT0, GL_SPECULAR, specularColor);
-//    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
+    // Set up a single light
+    glEnable(GL_LIGHTING);
+    glShadeModel(GL_SMOOTH);
+    GLfloat ambientColor[] = { 0.55f, 0.3f, 0.55f, 1.0f };
+    GLfloat diffuseColor[] = { 1.0f, 1.0f, 1.0, 1.0f };
+    GLfloat specularColor[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+    GLfloat lightPosition[] = { 0.f, 0.f, 10.f, 0.0f };
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientColor);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseColor);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularColor);
+    glLightfv(GL_LIGHT0, GL_POSITION, lightPosition);
 
-//    glEnable(GL_LIGHT0);
+    glEnable(GL_LIGHT0);
 
 
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-    m_terrain1 = loadTexture(":/textures/terrain/chris2.jpg");
-    m_terrain2 = loadTexture(":/textures/terrain/chris2.jpg");
+    m_terrain1 = loadTexture(":/textures/terrain/sand-texture.jpg");
+    m_terrain2 = loadTexture(":/textures/terrain/sand-texture.jpg");
     if (m_terrain1 == (unsigned int)(-1))
         cout << "Texture chris1 does not exist" << endl;
     if (m_terrain2 == (unsigned int)(-1))
@@ -1010,10 +1011,10 @@ double GLWidget::getPerturb(int cur_depth)
  */
 void GLWidget::populateTerrain()
 {
-    WorldPoint tl(-100, -90, -100);
-    WorldPoint tr(100, -90, -100);
-    WorldPoint bl(-100, -90, 100);
-    WorldPoint br(100, -90, 100);
+    WorldPoint tl(-150, -70, -150);
+    WorldPoint tr(150, -70, -150);
+    WorldPoint bl(-150, -70, 150);
+    WorldPoint br(150, -70, 150);
     GridIndex tlg(0,0);
     GridIndex trg(0,m_gridLength-1);
     GridIndex blg(m_gridLength-1, 0);

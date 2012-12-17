@@ -14,7 +14,6 @@
         <file>textures/nebula/purplez_left2.jpg</file>
         <file>textures/nebula/purplez_right1.jpg</file>
         <file>textures/nebula/purplez_top3.jpg</file>
-        <file>textures/terrain/chris.jpg</file>
-        <file>textures/terrain/chris2.jpg</file>
+        <file>textures/terrain/sand-texture.jpg</file>
     </qresource>
 </RCC>
